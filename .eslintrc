@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react",
+    "prettier/standard"
+  ],
+  "plugins": ["react", "react-native", "flowtype", "prettier", "standard"],
+  "parser": "babel-eslint",
+  "ecmaFeatures": {
+    "classes": true
+  },
+  "rules": {
+    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }]
+  }
+}
