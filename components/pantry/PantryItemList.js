@@ -4,7 +4,6 @@ import { UserContext } from '../../contexts/UserContext';
 import { api } from '../../settings';
 import PantryItemListItem from './PantryItemListItem';
 import { UpdatesContext } from '../../contexts/UpdatesContext'
-import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons';
 
 const PantryItemList = ({categoryId, itemOpenInMenu, setItemOpenInMenu}) => {
     const {token} =useContext(UserContext)

@@ -7,7 +7,9 @@ export const stylesColors = {
     yellow: "#F7AD08",
     menuBackground: '#EEE8D7',
     textColorLight: '#FFFFFF',
+    borderColorLight: '#FFFFFF',
     textColorDark: '#000000',
+    borderColorDark: '#000000',
     positiveButtonGreen: "green",
     regativeButtonRed: "red"
 }
