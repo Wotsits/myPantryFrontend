@@ -6,6 +6,7 @@ import SlidingMenu from '../slidingMenu/slidingMenu';
 import {api} from '../../settings'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import ListItem from '../ListItem';
+import { stylesColors } from '../../styleObjects';
 
 const Recipes = ({setActiveView}) => {
     const {token} = useContext(UserContext)
@@ -42,7 +43,7 @@ const Recipes = ({setActiveView}) => {
             <ScrollView style={styles.container.body}>
                 {recipes.length === 0 && <Text style={{color: 'white'}}>You have no saved recipes</Text>}
                 {recipes.length > 0 && recipes.map(recipe => (
-                    <ListItem imageSrc={recipe.imageSrc} >
+                    <ListItem imageSrc={recipe.imageSrc || 'https://i.ibb.co/Cs7y1WZ/utensils-solid-removebg-preview.png'} >
                         <Text style={styles.container.item.contentContainer.title}>{recipe.name}</Text>
                     </ListItem>
                 ))}
@@ -138,7 +139,9 @@ const styles = StyleSheet.create({
             width: Dimensions.get('window').width * 0.25,
             height: Dimensions.get('window').width * 0.25,
             borderRadius: Dimensions.get('window').width * 0.25,
-            backgroundColor: "#F7AD08"
+            backgroundColor: stylesColors.yellow,
+            borderColor: stylesColors.borderColorDark,
+            borderWidth: 2
         }
     },
     
