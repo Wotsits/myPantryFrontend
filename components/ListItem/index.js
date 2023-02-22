@@ -8,7 +8,7 @@ const ListItem = ({ children, imageSrc, itemActive, handleMenuActivation }) => {
 
     return (
         <View style={styles.item}>
-            {imageSrc && <Image source={imageSrc} style={styles.item.image}/>}
+            {imageSrc && <Image source={{uri: imageSrc}} style={styles.item.image}/>}
             <View style={[styles.item.contentContainer, {flex: imageSrc ? 0.60 : 0.80}]}>
                 {children}
             </View>
@@ -29,13 +29,17 @@ const styles = StyleSheet.create({
         borderTopColor: stylesColors.borderColorLight,
         borderBottomColor: stylesColors.borderColorLight,
         image: {
-            flex: 0.20,
+            flex: 0.30,
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            height: 100,
+            width: '100%'
 
         },
         contentContainer: {
             padding: 10,
+            justifyContent: 'center',
+            
         },
         ellipsisContainer: {
             flex: 0.20,
