@@ -5,7 +5,7 @@ import { UserContext } from '../../contexts/UserContext';
 import SlidingMenu from '../slidingMenu/slidingMenu';
 import {api} from '../../settings'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
-import {stylesWhiteText} from '../../styleObjects'
+import ListItem from '../ListItem';
 
 const Recipes = ({setActiveView}) => {
     const {token} = useContext(UserContext)
@@ -42,15 +42,9 @@ const Recipes = ({setActiveView}) => {
             <ScrollView style={styles.container.body}>
                 {recipes.length === 0 && <Text style={{color: 'white'}}>You have no saved recipes</Text>}
                 {recipes.length > 0 && recipes.map(recipe => (
-                    <View style={styles.container.item}>    
-                        <View style={styles.container.item.contentContainer}>
-                            <Image style={styles.container.item.contentContainer.image} source={{uri: recipe.imageSrc}} />
-                            <Text style={styles.container.item.contentContainer.title}>{recipe.name}</Text>
-                        </View>
-                        <View style={styles.container.item.ellipsisContainer}>
-                            <FontAwesome name={itemOpenInMenu === recipe.id ? 'ellipsis-v' : 'ellipsis-h'} size={26}/>
-                        </View>
-                    </View>
+                    <ListItem imageSrc={recipe.imageSrc} >
+                        <Text style={styles.container.item.contentContainer.title}>{recipe.name}</Text>
+                    </ListItem>
                 ))}
             </ScrollView>
             <View style={styles.container.floatingButton}>
