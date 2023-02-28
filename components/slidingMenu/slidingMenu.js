@@ -58,7 +58,7 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu}) => {
         return (
             <View style={styles.slidingMenu}>
                 <View style={styles.slidingMenu.closeContainer}>
-                    <FontAwesome name="times" size={24} onPress={closeMenu}/>
+                    <FontAwesome name="pencil-alt" size={24} onPress={closeMenu}/>
                 </View>
                 <View styles={styles.slidingMenu.contentContainer}>
                     <PantryItemEditForm itemBeingEditedId={itemOpenInMenu} closeMenu={closeMenu}/>

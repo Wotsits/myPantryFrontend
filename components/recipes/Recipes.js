@@ -1,5 +1,5 @@
 import React, { startTransition, useEffect, useState, useContext } from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Dimensions} from 'react-native'
+import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Dimensions, Pressable} from 'react-native'
 import Header from '../main/Header'
 import { UserContext } from '../../contexts/UserContext';
 import SlidingMenu from '../slidingMenu/slidingMenu';
@@ -7,11 +7,13 @@ import {api} from '../../settings'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import ListItem from '../ListItem';
 import { stylesColors } from '../../styleObjects';
+import RecipeDetail from './RecipeDetail';
 
 const Recipes = ({setActiveView}) => {
     const {token} = useContext(UserContext)
     const [itemOpenInMenu, setItemOpenInMenu] = useState("")
     const [menuStageOpen, setMenuStageOpen] = useState("MENU")
+    const [recipeOpen, setRecipeOpen] = useState(undefined)
 
     const [recipes, setRecipes] = useState(undefined)
 
@@ -37,15 +39,25 @@ const Recipes = ({setActiveView}) => {
     }, [])
 
     if (!recipes) return <Text>Loading...</Text>
+    if (recipeOpen) return (
+        <View style={styles.container}>
+            <Header viewName={"My Recipes"} setActiveView={setActiveView}/>
+            <RecipeDetail recipeId={recipeOpen} setRecipeOpen={setRecipeOpen}/>
+        </View>
+        
+    )
     return (
         <View style={styles.container}>
             <Header viewName={"My Recipes"} setActiveView={setActiveView}/>
             <ScrollView style={styles.container.body}>
                 {recipes.length === 0 && <Text style={{color: 'white'}}>You have no saved recipes</Text>}
                 {recipes.length > 0 && recipes.map(recipe => (
-                    <ListItem imageSrc={recipe.imageSrc || 'https://i.ibb.co/Cs7y1WZ/utensils-solid-removebg-preview.png'} >
-                        <Text style={styles.container.item.contentContainer.title}>{recipe.name}</Text>
-                    </ListItem>
+                    <View>
+                        <ListItem imageSrc={recipe.imageSrc || 'https://i.ibb.co/Cs7y1WZ/utensils-solid-removebg-preview.png'} setItemOpen={() => setRecipeOpen(recipe.id)}>
+                            <Text style={styles.container.item.contentContainer.title}>{recipe.name}</Text>
+                        </ListItem>
+                    </View>
+                    
                 ))}
             </ScrollView>
             <View style={styles.container.floatingButton}>

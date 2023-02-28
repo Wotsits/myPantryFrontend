@@ -1,21 +1,23 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button} from 'react-native'
+import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Pressable} from 'react-native'
 import { stylesColors } from '../../styleObjects';
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 
 
-const ListItem = ({ children, imageSrc, itemActive, handleMenuActivation }) => {
+const ListItem = ({ children, imageSrc, itemActive, handleMenuActivation, setItemOpen}) => {
 
     return (
-        <View style={styles.item}>
-            {imageSrc && <Image source={{uri: imageSrc}} style={styles.item.image}/>}
-            <View style={[styles.item.contentContainer, {flex: imageSrc ? 0.60 : 0.80}]}>
-                {children}
+        <Pressable onPress={setItemOpen}>
+            <View style={styles.item}>
+                {imageSrc && <Image source={{uri: imageSrc}} style={styles.item.image}/>}
+                <View style={[styles.item.contentContainer, {flex: imageSrc ? 0.60 : 0.80}]}>
+                    {children}
+                </View>
+                <View style={styles.item.ellipsisContainer}>
+                    <FontAwesome name={itemActive ? 'ellipsis-v' : 'ellipsis-h'} size={26} onPress={handleMenuActivation}/>
+                </View>
             </View>
-            <View style={styles.item.ellipsisContainer}>
-                <FontAwesome name={itemActive ? 'ellipsis-v' : 'ellipsis-h'} size={26} onPress={handleMenuActivation}/>
-            </View>
-        </View>
+        </Pressable>
     );
 }
 
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
         contentContainer: {
             padding: 10,
             justifyContent: 'center',
-            
+
         },
         ellipsisContainer: {
             flex: 0.20,
