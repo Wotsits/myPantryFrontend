@@ -22,13 +22,13 @@ const App = () => {
   useEffect(() => {
     //check for existing token
     getFromSecureStore('secure_token').then(token => {
-      setToken(token)
+      setToken(token).catch(err => console.log(err))
     });
   }, []) 
 
   function handleSetToken (token) {
     save('secure_token', token).then(() => {
-      setToken(token)
+      setToken(token).catch(err => console.log(err))
     })
   }
 
