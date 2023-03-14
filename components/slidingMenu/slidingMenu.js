@@ -1,5 +1,5 @@
 import React,{useContext} from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Pressable} from 'react-native'
+import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Pressable, ToastAndroid} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import PantryItemEditForm from '../EditForms/PantryItemEditForm';
 import RecipeEditForm from '../EditForms/RecipeEditForm';
@@ -12,8 +12,16 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
     const {token} =useContext(UserContext)
     const {setDeleted} = useContext(UpdatesContext)
 
-    function handleDelete() {
-        fetch(`${api}api/pantryItem/${itemOpenInMenu}`, {
+    function handleDelete(menuType) {
+        let deleteEndpoint = ""
+        //set the endpoint based on the menuType
+        if (menuType === "PANTRY") {
+            deleteEndpoint = `${api}api/pantryItem/`
+        }
+        if (menuType === "RECIPE") {
+            deleteEndpoint = `${api}api/recipe/`
+        }
+        fetch(`${deleteEndpoint}${itemOpenInMenu}`, {
             method: "DELETE",
             headers: {
                 'Authorization': `Token ${token}`
@@ -22,6 +30,8 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
         .then(response => {
             if (response.ok) {
                 setDeleted(itemOpenInMenu)
+                ToastAndroid.show(`Successfully deleted recipe`, ToastAndroid.SHORT)
+                return
             }
             throw new Error('Something went wrong');
         })
@@ -76,7 +86,7 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
                 </View>
                 <View styles={styles.slidingMenu.contentContainer}>
                     <View style={styles.slidingMenu.contentContainer.buttonContainer}>
-                        <Pressable style={styles.slidingMenu.contentContainer.buttonContainer.deleteButton} onPress={handleDelete}>
+                        <Pressable style={styles.slidingMenu.contentContainer.buttonContainer.deleteButton} onPress={() => handleDelete(menuType)}>
                             <FontAwesome name="trash-alt" color="white" size={32}/>
                             <Text style={{
                                 color: "white",
