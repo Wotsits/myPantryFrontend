@@ -75,6 +75,15 @@ const Recipes = ({setActiveView}) => {
 
     // -------------------
 
+    function handleMenuActivation(recipeId) {
+        if (itemOpenInMenu === recipeId) {
+            setItemOpenInMenu("")
+        }
+        if (itemOpenInMenu === "") {
+            setItemOpenInMenu(recipeId)
+        }
+    }
+
     if (!recipes) return <Text>Loading...</Text>
     if (recipeOpen) return (
         <View style={styles.container}>
@@ -90,7 +99,7 @@ const Recipes = ({setActiveView}) => {
                 {recipes.length === 0 && <Text style={{color: 'white'}}>You have no saved recipes</Text>}
                 {recipes.length > 0 && recipes.map(recipe => (
                     <View>
-                        <ListItem imageSrc={recipe.imageSrc || 'https://i.ibb.co/Cs7y1WZ/utensils-solid-removebg-preview.png'} setItemOpen={() => setRecipeOpen(recipe.id)}>
+                        <ListItem imageSrc={recipe.imageSrc || 'https://i.ibb.co/Cs7y1WZ/utensils-solid-removebg-preview.png'} setItemOpen={() => setRecipeOpen(recipe.id)} handleMenuActivation={() => handleMenuActivation(recipe.id)}>
                             <Text style={styles.container.item.contentContainer.title}>{recipe.name}</Text>
                         </ListItem>
                     </View>
@@ -106,8 +115,8 @@ const Recipes = ({setActiveView}) => {
             {itemOpenInMenu && (
                 <SlidingMenu 
                     buttons={[
-                        {icon: 'pencil-alt', text: "Edit Pantry Item", color: "black", onPress: () => setMenuStageOpen("EDIT")},
-                        {icon: 'trash-alt', text: "Delete Panty Item", color: "red", onPress: () => setMenuStageOpen("DELETE")}
+                        {icon: 'pencil-alt', text: "Edit Recipe", color: "black", onPress: () => setMenuStageOpen("EDIT")},
+                        {icon: 'trash-alt', text: "Delete Recipe", color: "red", onPress: () => setMenuStageOpen("DELETE")}
                     ]} 
                     menuStageOpen={menuStageOpen}
                     closeMenu={() => {

@@ -136,20 +136,20 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
                     <View style={styles.inputContainer}>
                         <View style={stylesFieldWithLabel}>
                             <Text style={stylesFieldWithLabel.label}>Name</Text>
-                            <TextInput style={stylesFieldWithLabel.field} onChangeText={setName}/>
+                            <TextInput style={stylesFieldWithLabel.field} value={name} onChangeText={setName}/>
                         </View> 
                     </View>
                 )}
                 <View style={styles.inputContainer}>
                     <View style={stylesFieldWithLabel}>
                         <Text style={stylesFieldWithLabel.label}>Serves</Text>
-                        <TextInput style={stylesFieldWithLabel.field} inputMode="numeric" onChangeText={setServes}/>
+                        <TextInput style={stylesFieldWithLabel.field} inputMode="numeric" value={serves} onChangeText={setServes}/>
                     </View> 
                 </View>
                 <View style={styles.inputContainer}>
                     <View style={stylesFieldWithLabel}>
                         <Text style={stylesFieldWithLabel.label}>Image Source</Text>
-                        <TextInput style={stylesFieldWithLabel.field} onChangeText={setImageSrc}/>
+                        <TextInput style={stylesFieldWithLabel.field} value={imageSrc} onChangeText={setImageSrc}/>
                     </View> 
                 </View>
             </View> 
