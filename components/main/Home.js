@@ -10,10 +10,6 @@ import ShoppingList from '../shoppingList/ShoppingList'
 const Home = () => {
     const [activeView, setActiveView] = useState(0)
 
-    useEffect(() => {
-        console.log(activeView)
-    }, [activeView])
-
     if (activeView === 0) {
         return <MainNavigation setActiveView={setActiveView} />
     }
