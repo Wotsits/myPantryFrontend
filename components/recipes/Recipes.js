@@ -8,9 +8,11 @@ import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import ListItem from '../ListItem';
 import { stylesColors } from '../../styleObjects';
 import RecipeDetail from './RecipeDetail';
+import { UpdatesContext } from '../../contexts/UpdatesContext'
 
 const Recipes = ({setActiveView}) => {
     const {token} = useContext(UserContext)
+    const {deleted, updated, created} = useContext(UpdatesContext)
     const [itemOpenInMenu, setItemOpenInMenu] = useState("")
     const [menuStageOpen, setMenuStageOpen] = useState("MENU")
     const [recipeOpen, setRecipeOpen] = useState(undefined)
@@ -37,6 +39,41 @@ const Recipes = ({setActiveView}) => {
             console.error(error)
         })
     }, [])
+
+    // -------------------
+    // Manage item updates from the updateContext which is effectively a messaging system which allows various areas of the app to communicate.
+    
+    useEffect(() => {
+        if (deleted && recipes) {
+            const matchingItemIndex = recipes.findIndex(item => item.id === deleted)
+            if (matchingItemIndex !== -1) {
+                const recipesCpy = [...recipes]
+                recipesCpy.splice(matchingItemIndex, 1)
+                setRecipes(recipesCpy)
+            }
+        }
+    }, [deleted])
+
+    useEffect(() => {
+        if (updated && recipes) {
+            const matchingItemIndex = recipes.findIndex(item => item.id === updated.id)
+            if (matchingItemIndex !== -1) {
+                const recipesCpy = [...recipes]
+                recipesCpy[matchingItemIndex] = updated
+                setRecipes(recipesCpy)
+            }
+        }
+    }, [updated])
+
+    useEffect(() => {
+        if (created && recipes) {
+            const recipesCpy = [...recipes]
+            recipesCpy.push(created)
+            setRecipes(recipesCpy)
+        }
+    }, [created])
+
+    // -------------------
 
     if (!recipes) return <Text>Loading...</Text>
     if (recipeOpen) return (
@@ -78,6 +115,7 @@ const Recipes = ({setActiveView}) => {
                         setMenuStageOpen("MENU")
                     }}
                     itemOpenInMenu={itemOpenInMenu}
+                    menuType={"RECIPE"}
                 />
             )}
         </View>

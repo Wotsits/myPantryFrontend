@@ -13,12 +13,6 @@ const PantryItemList = ({categoryId, itemOpenInMenu, setItemOpenInMenu}) => {
     const [loaded, setLoaded] = useState(false)
 
     useEffect(() => {
-        if (itemList.length > 0) {
-            console.log("ITEMLIST: ", itemList)
-        }
-    }, [itemList])
-
-    useEffect(() => {
         fetch(`${api}api/pantryItemsByCategory/${categoryId}`, {
             method: "GET",
             headers: {
@@ -40,9 +34,12 @@ const PantryItemList = ({categoryId, itemOpenInMenu, setItemOpenInMenu}) => {
         })
     }, [])
 
+    // -------------------
+    // Manage item updates from the updateContext which is effectively a messaging system which allows various areas of the app to communicate.
+    
     useEffect(() => {
         const matchingItemIndex = itemList.findIndex(item => item.id === deleted)
-        if (matchingItemIndex) {
+        if (matchingItemIndex !== -1) {
             const itemListCpy = [...itemList]
             itemListCpy.splice(matchingItemIndex, 1)
             setItemList(itemListCpy)
@@ -52,13 +49,23 @@ const PantryItemList = ({categoryId, itemOpenInMenu, setItemOpenInMenu}) => {
     useEffect(() => {
         if (updated) {
             const matchingItemIndex = itemList.findIndex(item => item.id === updated.id)
-            if (matchingItemIndex >= 0) {
+            if (matchingItemIndex !== -1) {
                 const itemListCpy = [...itemList]
                 itemListCpy[matchingItemIndex] = updated
                 setItemList(itemListCpy)
             }
         }
     }, [updated])
+
+    useEffect(() => {
+        if (created.category === categoryId) {
+            const itemListCpy = [...itemList]
+            itemListCpy.push(created)
+            setItemList(itemListCpy)
+        }
+    }, [created])
+
+    // -------------------
 
     return (
         <View>

@@ -6,6 +6,7 @@ import { UserContext } from '../../contexts/UserContext';
 import SlidingMenu from '../slidingMenu/slidingMenu';
 import {api} from '../../settings'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
+import { stylesColors } from '../../styleObjects';
 
 const Pantry = ({setActiveView}) => {
     const [categories, setCategories] = useState([])
@@ -65,6 +66,7 @@ const Pantry = ({setActiveView}) => {
                         setMenuStageOpen("MENU")
                     }}
                     itemOpenInMenu={itemOpenInMenu}
+                    menuType={"PANTRY"}
                 />
             )}
         </View>
@@ -107,7 +109,9 @@ const styles = StyleSheet.create({
             width: Dimensions.get('window').width * 0.25,
             height: Dimensions.get('window').width * 0.25,
             borderRadius: Dimensions.get('window').width * 0.25,
-            backgroundColor: "#F7AD08"
+            backgroundColor: stylesColors.yellow,
+            borderColor: stylesColors.borderColorDark,
+            borderWidth: 2
         }
     },
     

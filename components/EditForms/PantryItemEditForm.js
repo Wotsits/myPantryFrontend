@@ -10,7 +10,7 @@ import {stylesColors, stylesInputField, stylesFieldWithLabel} from '../../styleO
 const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
     
     const {token} = useContext(UserContext)
-    const {setUpdated} = useContext(UpdatesContext)
+    const {setUpdated, setCreated} = useContext(UpdatesContext)
     const [readyForRender, setReadyForRender] = useState(false)
 
     const [name, setName] = useState("")
@@ -104,7 +104,6 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
     // ----------
     // HANDLE EDIT AND CREATE
     function handleEdit() {
-        console.log("updatetriggered")
         const isValid = name !== "" && capacityMeasure !== "" && capacity !== "" && container !== "" && onHand !== ""
         if (isValid) {
             const payload = {
@@ -218,6 +217,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                                     setItems={setCategories}
                                     zIndex={3000}
                                     zIndexInverse={1000}
+                                    listMode="SCROLLVIEW"
                                 />
                             </View> 
                         </View>

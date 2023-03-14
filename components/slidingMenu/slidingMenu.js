@@ -2,12 +2,13 @@ import React,{useContext} from 'react';
 import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Pressable} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import PantryItemEditForm from '../EditForms/PantryItemEditForm';
+import RecipeEditForm from '../EditForms/RecipeEditForm';
 import { UserContext } from '../../contexts/UserContext';
 import { UpdatesContext } from '../../contexts/UpdatesContext';
 import { api } from '../../settings';
 
 
-const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu}) => {
+const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuType}) => {
     const {token} =useContext(UserContext)
     const {setDeleted} = useContext(UpdatesContext)
 
@@ -58,10 +59,11 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu}) => {
         return (
             <View style={styles.slidingMenu}>
                 <View style={styles.slidingMenu.closeContainer}>
-                    <FontAwesome name="pencil-alt" size={24} onPress={closeMenu}/>
+                    <FontAwesome name="times" size={24} onPress={closeMenu}/>
                 </View>
                 <View styles={styles.slidingMenu.contentContainer}>
-                    <PantryItemEditForm itemBeingEditedId={itemOpenInMenu} closeMenu={closeMenu}/>
+                    {menuType === "PANTRY" && <PantryItemEditForm itemBeingEditedId={itemOpenInMenu} closeMenu={closeMenu}/>}
+                    {menuType === "RECIPE" && <RecipeEditForm itemBeingEditedId={itemOpenInMenu} closeMenu={closeMenu}/>}
                 </View>
             </View>
         )
