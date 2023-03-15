@@ -44,33 +44,31 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
     // -----------
     // HANDLE INITIAL LOAD
     useEffect(() => {
-        //if we're creating a new item, call for the categories list.
-        if (itemBeingEditedId === "0") {
-            fetch(`${api}api/pantryItemCategories/`, {
-                method: "GET",
-                headers: {
-                    'Authorization': `Token ${token}`
-                }
+        // regardless, call for the categories list.
+        fetch(`${api}api/pantryItemCategories/`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Token ${token}`
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(data => {
+            const categoriesForDropdown = data.map(category => {
+                return {label: category.name, value: category.id}
             })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then(data => {
-                const categoriesForDropdown = data.map(category => {
-                    return {label: category.name, value: category.id}
-                })
-                setCategories(categoriesForDropdown)
-                setReadyForRender(true)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-        }
+            setCategories(categoriesForDropdown)
+            setReadyForRender(true)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
 
-        //otherwise, call for the existing item.
+        // otherwise, call for the existing item.
         if (itemBeingEditedId !== "0") {
             fetch(`${api}api/pantryItem/${itemBeingEditedId}`, {
                 method: "GET",

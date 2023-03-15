@@ -7,22 +7,53 @@ import { UpdatesContext } from '../../contexts/UpdatesContext';
 import { api } from '../../settings';
 import {stylesColors, stylesInputField, stylesFieldWithLabel} from '../../styleObjects'
 
-const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
+const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
     
     const {token} = useContext(UserContext)
     const {setUpdated, setCreated} = useContext(UpdatesContext)
     const [readyForRender, setReadyForRender] = useState(false)
 
-    const [name, setName] = useState("")
-    const [serves, setServes] = useState("")
-    const [imageSrc, setImageSrc] = useState("")
+    // ----------------
+    // FIELD STATE
+    const [pantryItem, setPantryItem] = useState("")
+    const [quantity, setQuantity] = useState("")
+    // ----------------
 
-    // -----------
+    // ----------------
+    // DROPDOWN STATE
+    const [pantryItemDropDownOpen, setPantryItemDropDownOpen] = useState(false)
+    const [pantryItems, setPantryItems] = useState(undefined)
+    // ----------------
+
+    // ----------------
     // HANDLE INITIAL LOAD
     useEffect(() => {
+        // regardless of whether we're editing or creating, we need to get the pantry items to populate the dropdown
+        fetch(`${api}api/pantryItems/`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Token ${token}`
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(data => {
+            const pantryItemsForDropdown = data.map(item => {
+                return {label: item.name, value: item.id}
+            })
+            setPantryItems(pantryItemsForDropdown)
+            setReadyForRender(true)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
         // call for the existing item.
         if (itemBeingEditedId !== "0") {
-            fetch(`${api}api/recipe/${itemBeingEditedId}`, {
+            fetch(`${api}api/ingredient/${itemBeingEditedId}`, {
                 method: "GET",
                 headers: {
                     'Authorization': `Token ${token}`
@@ -35,9 +66,8 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
                 throw new Error('Something went wrong');
             })
             .then(data => {
-                setName(data.name)
-                setServes(data.serves.toString())
-                setImageSrc(data.imageSrc)
+                setPantryItem(data.pantryItem)
+                setQuantity(data.quantity.toString())
                 setReadyForRender(true)
             })
             .catch((error) => {
@@ -47,19 +77,19 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
         else setReadyForRender(true)
     }, [])
 
-    // ----------
+    // ----------------
 
-    // ----------
+    // ----------------
     // HANDLE EDIT AND CREATE
     function handleEdit() {
-        const isValid = name !== "" && serves !== ""
+        const isValid = pantryItem !== "" && quantity !== ""
         if (isValid) {
             const payload = {
-                name: name,
-                serves: parseInt(serves),
-                imageSrc: imageSrc
+                recipe: recipeId,
+                pantryItem: pantryItem,
+                quantity: parseInt(quantity),
             }
-            fetch(`${api}api/recipe/${itemBeingEditedId}`, {
+            fetch(`${api}api/ingredient/${itemBeingEditedId}`, {
                 method: "PUT",
                 body: JSON.stringify(payload),
                 headers: {
@@ -75,7 +105,7 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
             })
             .then(data => {
                 setUpdated(data)
-                ToastAndroid.show(`Successfully updated ${data.name}`, ToastAndroid.SHORT)
+                ToastAndroid.show(`Successfully updated ingredient`, ToastAndroid.SHORT)
                 closeMenu()
             })
             .catch((error) => {
@@ -86,14 +116,14 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
     }
 
     function handleCreate() {
-        const isValid = name !== "" && serves !== ""
+        const isValid = pantryItem !== "" && quantity !== ""
         if (isValid) {
             const payload = {
-                name: name,
-                serves: parseInt(serves),
-                imageSrc: imageSrc
+                recipe: recipeId,
+                pantryItem: pantryItem,
+                quantity: parseInt(quantity),
             }
-            fetch(`${api}api/newRecipe/`, {
+            fetch(`${api}api/newIngredient/`, {
                 method: "POST",
                 body: JSON.stringify(payload),
                 headers: {
@@ -109,7 +139,7 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
             })
             .then(data => {
                 setCreated(data)
-                ToastAndroid.show(`Successfully created ${data.name}`, ToastAndroid.SHORT)
+                ToastAndroid.show(`Successfully created ingredient`, ToastAndroid.SHORT)
                 closeMenu()
             })
             .catch((error) => {
@@ -118,7 +148,7 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
         }
         else ToastAndroid.show('Form invalid - Please complete all fields', ToastAndroid.SHORT)
     }
-    // -----------
+    // ----------------
 
     if (!readyForRender) return <Text>Loading...</Text>
     else return (
@@ -126,30 +156,35 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
             <Text style={styles.title}>
                 {itemBeingEditedId !== "0" ? "Edit" : "New"}
             </Text>
-            {itemBeingEditedId !== "0" && (
-                <Text style={styles.subtitle}>
-                    {name}
-                </Text>
-            )}
+
+            <>
+                
+            </>
+
             <View style={styles.form}> 
-                {itemBeingEditedId === "0" && (
-                    <View style={styles.inputContainer}>
-                        <View style={stylesFieldWithLabel}>
-                            <Text style={stylesFieldWithLabel.label}>Name</Text>
-                            <TextInput style={stylesFieldWithLabel.field} value={name} onChangeText={setName}/>
-                        </View> 
-                    </View>
-                )}
                 <View style={styles.inputContainer}>
-                    <View style={stylesFieldWithLabel}>
-                        <Text style={stylesFieldWithLabel.label}>Serves</Text>
-                        <TextInput style={stylesFieldWithLabel.field} inputMode="numeric" keyboardType={"number-pad"} value={serves} onChangeText={setServes}/>
+                    <View style={[stylesFieldWithLabel, {zIndex: pantryItemDropDownOpen ? 1 : 0}]}>
+                        <Text style={stylesFieldWithLabel.label}>Pantry Item</Text>
+                        <DropDownPicker 
+                            open={pantryItemDropDownOpen}
+                            value={pantryItem}
+                            items={pantryItems ? pantryItems : ["Loading..."]}
+                            setOpen={() => {
+                                setPantryItemDropDownOpen(!pantryItemDropDownOpen)
+                            }}
+                            setValue={setPantryItem}
+                            setItems={setPantryItems}
+                            zIndex={3000}
+                            zIndexInverse={1000}
+                            listMode="SCROLLVIEW"
+                        />
                     </View> 
                 </View>
+                
                 <View style={styles.inputContainer}>
                     <View style={stylesFieldWithLabel}>
-                        <Text style={stylesFieldWithLabel.label}>Image Source</Text>
-                        <TextInput style={stylesFieldWithLabel.field} value={imageSrc} onChangeText={setImageSrc}/>
+                        <Text style={stylesFieldWithLabel.label}>Quantity</Text>
+                        <TextInput style={stylesFieldWithLabel.field} value={quantity} inputMode={"numeric"} keyboardType={"decimal-pad"} onChangeText={setQuantity}/>
                     </View> 
                 </View>
             </View> 
@@ -202,4 +237,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default RecipeEditForm
+export default IngredientEditForm

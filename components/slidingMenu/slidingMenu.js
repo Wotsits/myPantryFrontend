@@ -3,12 +3,13 @@ import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, B
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import PantryItemEditForm from '../EditForms/PantryItemEditForm';
 import RecipeEditForm from '../EditForms/RecipeEditForm';
+import IngredientEditForm from '../EditForms/IngredientEditForm';
 import { UserContext } from '../../contexts/UserContext';
 import { UpdatesContext } from '../../contexts/UpdatesContext';
 import { api } from '../../settings';
 
 
-const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuType}) => {
+const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuType, relatedItemId}) => {
     const {token} =useContext(UserContext)
     const {setDeleted} = useContext(UpdatesContext)
 
@@ -21,6 +22,9 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
         if (menuType === "RECIPE") {
             deleteEndpoint = `${api}api/recipe/`
         }
+        if (menuType === "INGREDIENT") {
+            deleteEndpoint = `${api}api/ingredient/`
+        }
         fetch(`${deleteEndpoint}${itemOpenInMenu}`, {
             method: "DELETE",
             headers: {
@@ -30,7 +34,7 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
         .then(response => {
             if (response.ok) {
                 setDeleted(itemOpenInMenu)
-                ToastAndroid.show(`Successfully deleted recipe`, ToastAndroid.SHORT)
+                ToastAndroid.show(`Successfully deleted ${menuType.toLowerCase()}`, ToastAndroid.SHORT)
                 return
             }
             throw new Error('Something went wrong');
@@ -74,6 +78,7 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
                 <View styles={styles.slidingMenu.contentContainer}>
                     {menuType === "PANTRY" && <PantryItemEditForm itemBeingEditedId={itemOpenInMenu} closeMenu={closeMenu}/>}
                     {menuType === "RECIPE" && <RecipeEditForm itemBeingEditedId={itemOpenInMenu} closeMenu={closeMenu}/>}
+                    {menuType === "INGREDIENT" && <IngredientEditForm itemBeingEditedId={itemOpenInMenu} closeMenu={closeMenu} recipeId={relatedItemId}/>}
                 </View>
             </View>
         )

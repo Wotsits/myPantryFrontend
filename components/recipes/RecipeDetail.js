@@ -5,15 +5,17 @@ import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import { UserContext } from '../../contexts/UserContext';
 import {api} from '../../settings'
 import ListItem from '../ListItem';
+import SlidingMenu from '../slidingMenu/slidingMenu';
+import { UpdatesContext } from '../../contexts/UpdatesContext'
 
-const RecipeDetail = ({recipeId, setRecipeOpen}) => {
+const RecipeDetail = ({recipeId}) => {
     const {token} = useContext(UserContext)
+    const {deleted, updated, created} = useContext(UpdatesContext)
+
     const [recipe, setRecipe] = useState(undefined)
     const [ingredients, setIngredients] = useState(undefined)
-
-    useEffect(() => {
-        console.log("recipe: ", recipe)
-    }, [ingredients])
+    const [itemOpenInMenu, setItemOpenInMenu] = useState("")
+    const [menuStageOpen, setMenuStageOpen] = useState("MENU")
 
     useEffect(() => {
         fetch(`${api}api/recipe/${recipeId}`, {
@@ -57,7 +59,45 @@ const RecipeDetail = ({recipeId, setRecipeOpen}) => {
         })
     }, [])
 
+    // -------------------
+    // Manage item updates from the updateContext which is effectively a messaging system which allows various areas of the app to communicate.
+    
+    useEffect(() => {
+        if (deleted && ingredients) {
+            const matchingItemIndex = ingredients.findIndex(item => item.id === deleted)
+            if (matchingItemIndex !== -1) {
+                const ingredientsCpy = [...ingredients]
+                ingredientsCpy.splice(matchingItemIndex, 1)
+                setIngredients(ingredientsCpy)
+            }
+        }
+    }, [deleted])
+
+    useEffect(() => {
+        if (updated && ingredients) {
+            const matchingItemIndex = ingredients.findIndex(item => item.id === updated.id)
+            if (matchingItemIndex !== -1) {
+                const ingredientsCpy = [...ingredients]
+                ingredientsCpy[matchingItemIndex] = updated
+                setIngredients(ingredientsCpy)
+            }
+        }
+    }, [updated])
+
+    useEffect(() => {
+        if (created && ingredients) {
+            if (created.recipe.id === recipeId) {
+                const ingredientsCpy = [...ingredients]
+                ingredientsCpy.push(created)
+                setIngredients(ingredientsCpy)
+            }
+        }
+    }, [created])
+
+    // -------------------
+
     if (!recipe || !ingredients) return <Text>Loading...</Text>
+    console.log(ingredients)
     return (
         <View style={styles.container}>
             {recipe.imageSrc && (
@@ -89,6 +129,22 @@ const RecipeDetail = ({recipeId, setRecipeOpen}) => {
                     setMenuStageOpen("NEW")
                 }}/>
             </View>
+            {itemOpenInMenu && (
+                <SlidingMenu 
+                    buttons={[
+                        {icon: 'pencil-alt', text: "Edit Recipe", color: "black", onPress: () => setMenuStageOpen("EDIT")},
+                        {icon: 'trash-alt', text: "Delete Recipe", color: "red", onPress: () => setMenuStageOpen("DELETE")}
+                    ]} 
+                    menuStageOpen={menuStageOpen}
+                    closeMenu={() => {
+                        setItemOpenInMenu("")
+                        setMenuStageOpen("MENU")
+                    }}
+                    itemOpenInMenu={itemOpenInMenu}
+                    menuType={"INGREDIENT"}
+                    relatedItemId={recipe.id}
+                />
+            )}
         </View>
     )
 }
