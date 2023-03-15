@@ -5,7 +5,7 @@ import Header from '../main/Header'
 const Planner = ({setActiveView}) => {
     return (
         <View style={styles.container}>
-            <Header viewName={"My Planner"} setActiveView={setActiveView}/>
+            <Header viewName={"My Planner"} setActiveView={() => setActiveView(0)}/>
             <Text>My Planner</Text>
         </View>
     )

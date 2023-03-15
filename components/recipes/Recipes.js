@@ -87,14 +87,14 @@ const Recipes = ({setActiveView}) => {
     if (!recipes) return <Text>Loading...</Text>
     if (recipeOpen) return (
         <View style={styles.container}>
-            <Header viewName={"My Recipes"} setActiveView={setActiveView}/>
+            <Header viewName={"My Recipes"} setActiveView={() => setRecipeOpen(undefined)}/>
             <RecipeDetail recipeId={recipeOpen} setRecipeOpen={setRecipeOpen}/>
         </View>
         
     )
     return (
         <View style={styles.container}>
-            <Header viewName={"My Recipes"} setActiveView={setActiveView}/>
+            <Header viewName={"My Recipes"} setActiveView={() => setActiveView(0)}/>
             <ScrollView style={styles.container.body}>
                 {recipes.length === 0 && <Text style={{color: 'white'}}>You have no saved recipes</Text>}
                 {recipes.length > 0 && recipes.map(recipe => (

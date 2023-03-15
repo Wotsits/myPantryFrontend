@@ -10,20 +10,24 @@ import ShoppingList from '../shoppingList/ShoppingList'
 const Home = () => {
     const [activeView, setActiveView] = useState(0)
 
+    function handleSetActiveView(view) {
+        setActiveView(view)
+    }
+
     if (activeView === 0) {
-        return <MainNavigation setActiveView={setActiveView} />
+        return <MainNavigation setActiveView={handleSetActiveView} />
     }
     if (activeView === 1) {
-        return <Pantry setActiveView={setActiveView} />
+        return <Pantry setActiveView={handleSetActiveView} />
     }
     if (activeView === 2) {
-        return <Recipes setActiveView={setActiveView} />
+        return <Recipes setActiveView={handleSetActiveView} />
     }
     if (activeView === 3) {
-        return <Planner setActiveView={setActiveView} />
+        return <Planner setActiveView={handleSetActiveView} />
     }
     if (activeView === 4) {
-        return <ShoppingList setActiveView={setActiveView} />
+        return <ShoppingList setActiveView={handleSetActiveView} />
     }
     return null
 }

@@ -37,7 +37,7 @@ const Pantry = ({setActiveView}) => {
 
     return (
         <View style={styles.container}>
-            <Header viewName={"My Pantry"} setActiveView={setActiveView}/>
+            <Header viewName={"My Pantry"} setActiveView={() => setActiveView(0)}/>
             <ScrollView style={styles.container.body}>
                 {categories.map(category => (
                     <View key={category.id} style={styles.container.body.category}>

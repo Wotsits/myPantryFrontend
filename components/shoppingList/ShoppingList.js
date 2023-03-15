@@ -6,7 +6,7 @@ import Header from '../main/Header'
 const ShoppingList = ({setActiveView}) => {
     return (
         <View style={styles.container}>
-            <Header viewName={"My Shopping List"} setActiveView={setActiveView}/>
+            <Header viewName={"My Shopping List"} setActiveView={() => setActiveView(0)}/>
             <Text>My ShoppingList</Text>
         </View>
     )
