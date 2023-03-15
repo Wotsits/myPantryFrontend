@@ -2,10 +2,10 @@ import React from 'react';
 import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button} from 'react-native'
 import Header from '../main/Header'
 
-const Planner = ({setActiveView}) => {
+const Planner = ({setActiveView, toggleNav}) => {
     return (
         <View style={styles.container}>
-            <Header viewName={"My Planner"} setActiveView={() => setActiveView(0)}/>
+            <Header viewName={"My Planner"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
             <Text>My Planner</Text>
         </View>
     )

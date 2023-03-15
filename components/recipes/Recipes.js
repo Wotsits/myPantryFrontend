@@ -10,7 +10,7 @@ import { stylesColors } from '../../styleObjects';
 import RecipeDetail from './RecipeDetail';
 import { UpdatesContext } from '../../contexts/UpdatesContext'
 
-const Recipes = ({setActiveView}) => {
+const Recipes = ({setActiveView, toggleNav}) => {
     const {token} = useContext(UserContext)
     const {deleted, updated, created} = useContext(UpdatesContext)
     const [itemOpenInMenu, setItemOpenInMenu] = useState("")
@@ -87,14 +87,14 @@ const Recipes = ({setActiveView}) => {
     if (!recipes) return <Text>Loading...</Text>
     if (recipeOpen) return (
         <View style={styles.container}>
-            <Header viewName={"My Recipes"} setActiveView={() => setRecipeOpen(undefined)}/>
+            <Header viewName={"My Recipes"} setActiveView={() => setRecipeOpen(undefined)} toggleNav={toggleNav}/>
             <RecipeDetail recipeId={recipeOpen} setRecipeOpen={setRecipeOpen}/>
         </View>
         
     )
     return (
         <View style={styles.container}>
-            <Header viewName={"My Recipes"} setActiveView={() => setActiveView(0)}/>
+            <Header viewName={"My Recipes"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
             <ScrollView style={styles.container.body}>
                 {recipes.length === 0 && <Text style={{color: 'white'}}>You have no saved recipes</Text>}
                 {recipes.length > 0 && recipes.map(recipe => (

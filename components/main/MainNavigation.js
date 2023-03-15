@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button} from 'react-native'
 import Header from './Header'
 
-const MainNavigation = ({setActiveView}) => {
+const MainNavigation = ({setActiveView, toggleNav}) => {
 
     const options = [
         {
@@ -25,7 +25,7 @@ const MainNavigation = ({setActiveView}) => {
 
     return (
         <ImageBackground source={require('../../assets/splash.png')} style={styles.container}>
-            <Header/>
+            <Header toggleNav={toggleNav}/>
             <ScrollView style={styles.body}>
                 {options.map((option, index) => {
                     if (index === 0) {

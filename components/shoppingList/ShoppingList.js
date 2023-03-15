@@ -3,10 +3,10 @@ import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, B
 import Header from '../main/Header'
 
 
-const ShoppingList = ({setActiveView}) => {
+const ShoppingList = ({setActiveView, toggleNav}) => {
     return (
         <View style={styles.container}>
-            <Header viewName={"My Shopping List"} setActiveView={() => setActiveView(0)}/>
+            <Header viewName={"My Shopping List"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
             <Text>My ShoppingList</Text>
         </View>
     )

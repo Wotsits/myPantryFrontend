@@ -3,10 +3,10 @@ import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, B
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 
 
-const Header = ({setActiveView, viewName}) => {
+const Header = ({setActiveView, viewName, toggleNav}) => {
     return (
         <View style={styles.header}>
-            <FontAwesome style={styles.header.headerItem} name='bars' size={32}/>
+            <FontAwesome style={styles.header.headerItem} name='bars' size={32} onPress={toggleNav}/>
             {viewName && <Text style={styles.header.viewName} onPress={setActiveView}>{viewName}</Text>}
             {!viewName && <Image source={require('../../assets/logo.png')} style={styles.header.logo} onPress={() => setActiveView(0)}/>}
             <FontAwesome style={styles.header.headerItem} name='cog' size={32}/>

@@ -8,7 +8,7 @@ import {api} from '../../settings'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import { stylesColors } from '../../styleObjects';
 
-const Pantry = ({setActiveView}) => {
+const Pantry = ({setActiveView, toggleNav}) => {
     const [categories, setCategories] = useState([])
     const {token} = useContext(UserContext)
     const [itemOpenInMenu, setItemOpenInMenu] = useState("")
@@ -37,7 +37,7 @@ const Pantry = ({setActiveView}) => {
 
     return (
         <View style={styles.container}>
-            <Header viewName={"My Pantry"} setActiveView={() => setActiveView(0)}/>
+            <Header viewName={"My Pantry"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
             <ScrollView style={styles.container.body}>
                 {categories.map(category => (
                     <View key={category.id} style={styles.container.body.category}>
