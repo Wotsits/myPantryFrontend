@@ -16,6 +16,10 @@ async function save(key, value) {
   await SecureStore.setItemAsync(key, value);
 }
 
+async function deleteFromSecureStore() {
+  await SecureStore.deleteItemAsync('secure_token');
+}
+
 const App = () => {
   const [token, setToken] = useState(undefined)
 
@@ -32,8 +36,14 @@ const App = () => {
     })
   }
 
+  function handleLogOut() {
+    deleteFromSecureStore().then(() => {
+      setToken(undefined).catch(err => console.log(err))
+    })
+  }
+
   return (
-    <UserContext.Provider value={{token: token}} >
+    <UserContext.Provider value={{token: token, logOut: handleLogOut}} >
       <UpdatesContextProvider value={{deleted: undefined, updated: undefined}} >
         <View style={styles.container}>
           {!token && <Login setToken={handleSetToken}/>}

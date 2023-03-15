@@ -17,7 +17,6 @@ const Home = () => {
     }
 
     function toggleNav() {
-        console.log("toggle")
         setNavOpen(!navOpen)
     }
 

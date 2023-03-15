@@ -1,15 +1,22 @@
 import React from 'react';
 import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
+import { UserContext } from '../../contexts/UserContext';
 
 
 const Header = ({setActiveView, viewName, toggleNav}) => {
+    const {logOut} = React.useContext(UserContext);
+
+    function handleLogOut() {
+        logOut('secure_token')
+    }
+
     return (
         <View style={styles.header}>
             <FontAwesome style={styles.header.headerItem} name='bars' size={32} onPress={toggleNav}/>
             {viewName && <Text style={styles.header.viewName} onPress={setActiveView}>{viewName}</Text>}
             {!viewName && <Image source={require('../../assets/logo.png')} style={styles.header.logo} onPress={() => setActiveView(0)}/>}
-            <FontAwesome style={styles.header.headerItem} name='cog' size={32}/>
+            <FontAwesome style={styles.header.headerItem} name='sign-out-alt' size={32} onPress={() => handleLogOut()}/>
         </View>
     )
 }
