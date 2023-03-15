@@ -96,6 +96,15 @@ const RecipeDetail = ({recipeId}) => {
 
     // -------------------
 
+    function handleMenuActivation(ingredientId) {
+        if (itemOpenInMenu === ingredientId) {
+            setItemOpenInMenu("")
+        }
+        if (itemOpenInMenu === "") {
+            setItemOpenInMenu(ingredientId)
+        }
+    }
+
     if (!recipe || !ingredients) return <Text>Loading...</Text>
     console.log(ingredients)
     return (
@@ -116,7 +125,7 @@ const RecipeDetail = ({recipeId}) => {
             </View>
             {ingredients.length === 0 && <View style={styles.container.noItems}><Text style={styles.container.noItems.text}>No ingredients added yet</Text></View>}
             {ingredients.length > 0 && ingredients.map(ingredient => (
-                <ListItem>
+                <ListItem itemActive={itemOpenInMenu === ingredient.id} setItemOpen={() => setItemOpenInMenu(recipe.id)} handleMenuActivation={() => handleMenuActivation(ingredient.id)}>
                     <View style={styles.container.item}>
                         <Text>{ingredient.pantryItem.name}</Text>
                         <Text>{ingredient.quantity} {ingredient.pantryItem.container}</Text>
@@ -132,8 +141,8 @@ const RecipeDetail = ({recipeId}) => {
             {itemOpenInMenu && (
                 <SlidingMenu 
                     buttons={[
-                        {icon: 'pencil-alt', text: "Edit Recipe", color: "black", onPress: () => setMenuStageOpen("EDIT")},
-                        {icon: 'trash-alt', text: "Delete Recipe", color: "red", onPress: () => setMenuStageOpen("DELETE")}
+                        {icon: 'pencil-alt', text: "Edit Ingredient", color: "black", onPress: () => setMenuStageOpen("EDIT")},
+                        {icon: 'trash-alt', text: "Delete Ingredient", color: "red", onPress: () => setMenuStageOpen("DELETE")}
                     ]} 
                     menuStageOpen={menuStageOpen}
                     closeMenu={() => {

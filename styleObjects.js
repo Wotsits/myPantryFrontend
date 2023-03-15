@@ -26,14 +26,24 @@ export const stylesInputField = {
 }
 
 export const stylesFieldWithLabel = {
-    width: "100%",
+    flex: 1,
     marginBottom: 10,
     label: {
         marginBottom: 5,
         fontWeight: "bold"
     },
-    field: stylesInputField
+    field: stylesInputField,
+    twoPartField: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        item: {
+            flex: 0.5,
+            marginRight: 10
+        }
+    }
 }
+
 
 export const stylesWhiteText = {
     color: '#FFFFFF'

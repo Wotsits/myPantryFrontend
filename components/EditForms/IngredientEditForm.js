@@ -5,7 +5,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { UserContext } from '../../contexts/UserContext';
 import { UpdatesContext } from '../../contexts/UpdatesContext';
 import { api } from '../../settings';
-import {stylesColors, stylesInputField, stylesFieldWithLabel} from '../../styleObjects'
+import {stylesColors, stylesInputField, stylesFieldWithLabel, stylesWidthHalf} from '../../styleObjects'
 
 const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
     
@@ -86,7 +86,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
         if (isValid) {
             const payload = {
                 recipe: recipeId,
-                pantryItem: pantryItem,
+                pantryItem: pantryItem.id,
                 quantity: parseInt(quantity),
             }
             fetch(`${api}api/ingredient/${itemBeingEditedId}`, {
@@ -120,7 +120,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
         if (isValid) {
             const payload = {
                 recipe: recipeId,
-                pantryItem: pantryItem,
+                pantryItem: pantryItem.id,
                 quantity: parseInt(quantity),
             }
             fetch(`${api}api/newIngredient/`, {
@@ -167,7 +167,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                         <Text style={stylesFieldWithLabel.label}>Pantry Item</Text>
                         <DropDownPicker 
                             open={pantryItemDropDownOpen}
-                            value={pantryItem}
+                            value={pantryItem.id}
                             items={pantryItems ? pantryItems : ["Loading..."]}
                             setOpen={() => {
                                 setPantryItemDropDownOpen(!pantryItemDropDownOpen)
@@ -184,9 +184,13 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                 <View style={styles.inputContainer}>
                     <View style={stylesFieldWithLabel}>
                         <Text style={stylesFieldWithLabel.label}>Quantity</Text>
-                        <TextInput style={stylesFieldWithLabel.field} value={quantity} inputMode={"numeric"} keyboardType={"decimal-pad"} onChangeText={setQuantity}/>
+                        <View style={stylesFieldWithLabel.twoPartField}>
+                            <TextInput style={[stylesFieldWithLabel.field, stylesFieldWithLabel.twoPartField.item]} value={quantity} inputMode={"numeric"} keyboardType={"decimal-pad"} onChangeText={setQuantity}/>
+                            <Text style={stylesFieldWithLabel.twoPartField.item}>{pantryItem.capacity}{pantryItem.capacityMeasure} {pantryItem.container}</Text>
+                        </View>
                     </View> 
                 </View>
+                
             </View> 
             <View style={styles.buttonContainer}>
                 <Pressable style={styles.buttonContainer.saveButton} onPress={itemBeingEditedId !== "0" ? handleEdit : handleCreate}>
@@ -216,13 +220,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         flexDirection: "row",
-        inputLeft: {
-            flex: 0.25,
-            marginRight: 20,
-        },
-        inputRight: {
-            flex: 0.75,
-        }
+        flex: 1
     },
     buttonContainer: {
         saveButton: {

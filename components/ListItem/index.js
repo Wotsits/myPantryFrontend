@@ -3,6 +3,12 @@ import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, B
 import { stylesColors } from '../../styleObjects';
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 
+// EXPLANATION OF PROPS:
+// children: the content of the ListItem
+// imageSrc: the source of the image to be displayed in the ListItem
+// itemActive: whether the ListItem is active or not
+// handleMenuActivation: the function to be called when the menu is activated
+// setItemOpen: the function to be called when the ListItem is pressed 
 
 const ListItem = ({ children, imageSrc, itemActive, handleMenuActivation, setItemOpen}) => {
 
