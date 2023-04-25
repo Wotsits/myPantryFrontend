@@ -1,14 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground, Image, TextInput, Button} from 'react-native'
+import {View, StyleSheet, ImageBackground, Image, TextInput, Button, Text} from 'react-native'
 import {api} from '../../settings'
+import { stylesColors } from '../../styleObjects';
 
 const Login = ({setToken}) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loginLoading, setLoginLoading] = useState(false)
-
-    //await SecureStore.setItemAsync('secure_token','<token>');
-
+    const [loginFailed, setLoginFailed] = useState(false)
+    
+    useEffect(() => {
+      console.log(loginFailed)
+    }, [loginFailed])
+    
+    /**
+     * A function which handles the login process
+     */
     function handleLogin () {
         setLoginLoading(true)
         fetch(`${api}api-token-auth/`, {
@@ -26,9 +33,12 @@ const Login = ({setToken}) => {
                 return response.json();
             }
             setLoginLoading(false)
-            throw new Error('Something went wrong');
+            setLoginFailed(true)
+            setTimeout(() => setLoginFailed(false), 3000)
+            throw new Error('Network response was not ok.');
         })
         .then(data => {
+          console.log(data)
             const token = data.token
             setLoginLoading(false)
             setToken(token)
@@ -44,6 +54,13 @@ const Login = ({setToken}) => {
                 <Image style={styles.logo} source={require('../../assets/logo.png')} />
             </View>
             <View style={styles.section}>
+              {loginFailed && <Text style={{
+                backgroundColor: stylesColors.negativeBackgroundRed,
+                color: "black",
+                borderRadius: 3,
+                borderColor: stylesColors.negativeBorderRed,
+                padding: 20
+              }}>Oops!  Login Failed - please try again</Text>}
                 <View style={styles.inputWrapper}>
                     <TextInput style={styles.field} value={username} onChangeText={setUsername} inputMode="email" keyboardType="email-address" textAlign={"center"} placeholder={"Email Address"} autoFocus/>
                     <TextInput style={styles.field} value={password} onChangeText={setPassword} secureTextEntry={true} textAlign={"center"} placeholder={"Password"}/>

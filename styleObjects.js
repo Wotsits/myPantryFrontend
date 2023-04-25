@@ -11,7 +11,11 @@ export const stylesColors = {
     textColorDark: '#000000',
     borderColorDark: '#000000',
     positiveButtonGreen: "green",
-    regativeButtonRed: "red"
+    regativeButtonRed: "red",
+    negativeBackgroundRed: "#f7bcbc",
+    positiveBackgroundGreen: "#b4f7b4",
+    negativeBorderRed: "red",
+    positiveBorderGreen: "green",
 }
 
 export const stylesInputField = {

@@ -1,5 +1,5 @@
 import React, { startTransition, useEffect, useState, useContext } from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Dimensions, Pressable} from 'react-native'
+import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Dimensions, Pressable, CheckBox} from 'react-native'
 import Header from '../main/Header'
 import { UserContext } from '../../contexts/UserContext';
 import SlidingMenu from '../slidingMenu/slidingMenu';
@@ -16,8 +16,14 @@ const Recipes = ({setActiveView, toggleNav}) => {
     const [itemOpenInMenu, setItemOpenInMenu] = useState("")
     const [menuStageOpen, setMenuStageOpen] = useState("MENU")
     const [recipeOpen, setRecipeOpen] = useState(undefined)
+    const [shoppingListCreationInProgress, setShoppingListCreationInProgress] = useState(false)
+    const [readyForRender, setReadyForRender] = useState(false)
 
-    const [recipes, setRecipes] = useState(undefined)
+    const [recipes, setRecipes] = useState([])
+
+    useEffect(() => {
+        console.log(recipes.map(recipe => recipe.servings))
+    }, [recipes])
 
     useEffect(() => {
         fetch(`${api}api/recipes/`, {
@@ -33,7 +39,8 @@ const Recipes = ({setActiveView, toggleNav}) => {
             throw new Error('Something went wrong');
         })
         .then(data => {
-            setRecipes(data)
+            setRecipes(data.map(recipe => ({...recipe, servings: 0})))
+            setReadyForRender(true)
         })
         .catch((error) => {
             console.error(error)
@@ -59,7 +66,7 @@ const Recipes = ({setActiveView, toggleNav}) => {
             const matchingItemIndex = recipes.findIndex(item => item.id === updated.id)
             if (matchingItemIndex !== -1) {
                 const recipesCpy = [...recipes]
-                recipesCpy[matchingItemIndex] = updated
+                recipesCpy[matchingItemIndex] = {...updated, servings: 0}
                 setRecipes(recipesCpy)
             }
         }
@@ -68,7 +75,7 @@ const Recipes = ({setActiveView, toggleNav}) => {
     useEffect(() => {
         if (created && recipes) {
             const recipesCpy = [...recipes]
-            recipesCpy.push(created)
+            recipesCpy.push({...created, servings: 0})
             setRecipes(recipesCpy)
         }
     }, [created])
@@ -84,7 +91,53 @@ const Recipes = ({setActiveView, toggleNav}) => {
         }
     }
 
-    if (!recipes) return <Text>Loading...</Text>
+    function handleFieldUpdate(index, value) {
+        const recipesCpy = [...recipes]
+        recipesCpy[index].servings = parseInt(value)
+        setRecipes(recipesCpy)
+    }
+
+    function handleReset() {
+        setShoppingListCreationInProgress(!shoppingListCreationInProgress)
+        setRecipes(recipes.map(recipe => ({...recipe, servings: 0})))
+    }
+
+    function handleShoppingListSubmit() {
+        const recipesToSubmit = recipes.filter(recipe => recipe.servings > 0)
+        console.log(recipesToSubmit)
+
+        if (recipesToSubmit.length === 0) {
+            handleReset()
+            return
+        }
+
+        const payload = recipesToSubmit.map(recipe => ({id: recipe.id, servings: recipe.servings}))
+        
+        // reset the generate shopping list form 
+        handleReset()
+
+        fetch(`${api}api/generate-shopping-list/`, {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(data => {
+            console.log(data)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+    }
+
+    if (!readyForRender) return <Text>Loading...</Text>
     if (recipeOpen) return (
         <View style={styles.container}>
             <Header viewName={"My Recipes"} setActiveView={() => setRecipeOpen(undefined)} toggleNav={toggleNav}/>
@@ -95,11 +148,29 @@ const Recipes = ({setActiveView, toggleNav}) => {
     return (
         <View style={styles.container}>
             <Header viewName={"My Recipes"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
+            {recipes.length === 0 && <Text>No recipes.  Why not add a recipe by clicking the yellow plus button?</Text>}
+            {!shoppingListCreationInProgress && <View style={styles.container.createListContainer}><Text style={styles.container.createListContainer.createListButton} onPress={() => setShoppingListCreationInProgress(true)}>Create Shopping List</Text></View>}
+            {shoppingListCreationInProgress && (
+                <View style={styles.container.createListContainer}>
+                    {recipes.filter(recipe => recipe.servings > 0).length > 0 && (
+                        <View>
+                            <Text style={styles.container.createListContainer.createListButton} onPress={handleShoppingListSubmit}>
+                                Generate
+                            </Text>
+                        </View>
+                    )}
+                    <View>
+                        <Text style={styles.container.createListContainer.createListButton} onPress={handleReset}>
+                            Cancel
+                        </Text>
+                    </View>
+                </View>
+            )}
             <ScrollView style={styles.container.body}>
                 {recipes.length === 0 && <Text style={{color: 'white'}}>You have no saved recipes</Text>}
-                {recipes.length > 0 && recipes.map(recipe => (
-                    <View>
-                        <ListItem imageSrc={recipe.imageSrc || 'https://i.ibb.co/Cs7y1WZ/utensils-solid-removebg-preview.png'} itemActive={itemOpenInMenu === recipe.id} setItemOpen={() => setRecipeOpen(recipe.id)} handleMenuActivation={() => handleMenuActivation(recipe.id)}>
+                {recipes.length > 0 && recipes.map((recipe, index) => (
+                    <View key={recipe.id}>
+                        <ListItem imageSrc={recipe.imageSrc || 'https://i.ibb.co/Cs7y1WZ/utensils-solid-removebg-preview.png'} itemActive={itemOpenInMenu === recipe.id} setItemOpen={() => setRecipeOpen(recipe.id)} handleMenuActivation={() => handleMenuActivation(recipe.id)} fieldValue={recipe.servings} exposeField={shoppingListCreationInProgress} callbackOnFieldChange={(value) => handleFieldUpdate(index, value)}>
                             <Text style={styles.container.item.contentContainer.title}>{recipe.name}</Text>
                         </ListItem>
                     </View>
@@ -139,6 +210,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: "#000000",
+        createListContainer: {
+            width: "100%",
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            createListButton: {
+                color: stylesColors.textColorLight,
+                marginRight: 20,
+                marginBottom: 20,
+            }
+        },
         body: {
             flex: 0.85,
             width: "100%",
