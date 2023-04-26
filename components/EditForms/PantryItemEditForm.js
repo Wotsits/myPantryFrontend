@@ -194,13 +194,13 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                     <>
                         <View style={styles.inputContainer}>
                             <View style={stylesFieldWithLabel}>
-                                <Text style={stylesFieldWithLabel.label}>Name</Text>
+                                <Text style={stylesFieldWithLabel.label}>Name*</Text>
                                 <TextInput style={stylesFieldWithLabel.field} onChangeText={setName}/>
                             </View> 
                         </View>
                         <View style={styles.inputContainer}>
                             <View style={[stylesFieldWithLabel, {zIndex: categoryDropDownOpen ? 1 : 0}]}>
-                                <Text style={stylesFieldWithLabel.label}>Category</Text>
+                                <Text style={stylesFieldWithLabel.label}>Category*</Text>
                                 <DropDownPicker 
                                     open={categoryDropDownOpen}
                                     value={category}
@@ -225,7 +225,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                     </>
                 )}
                 <View style={stylesFieldWithLabel}>
-                    <Text style={stylesFieldWithLabel.label}>Capacity Of each container</Text>
+                    <Text style={stylesFieldWithLabel.label}>Capacity of each container*</Text>
                     <View style={styles.inputContainer}>
                         <TextInput style={[styles.inputContainer.inputLeft, stylesInputField]} value={capacity} onChangeText={setCapacity}/>
                         <View style={[styles.inputContainer.inputRight, {zIndex: capacityMeasuresDropDownOpen ? 1 : 0}]}>
@@ -252,7 +252,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                     </View>
                 </View>
                 <View style={stylesFieldWithLabel}>
-                    <Text style={stylesFieldWithLabel.label}>Number of containers on hand</Text>
+                    <Text style={stylesFieldWithLabel.label}>Number of containers on hand*</Text>
                     <View style={styles.inputContainer}>
                         <TextInput style={[styles.inputContainer.inputLeft, stylesInputField]} value={onHand} onChangeText={setOnHand}/>
                         <View style={[styles.inputContainer.inputRight, {zIndex: containerDropDownOpen ? 1 : 0}]}>

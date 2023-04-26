@@ -135,14 +135,14 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
                 {itemBeingEditedId === "0" && (
                     <View style={styles.inputContainer}>
                         <View style={stylesFieldWithLabel}>
-                            <Text style={stylesFieldWithLabel.label}>Name</Text>
+                            <Text style={stylesFieldWithLabel.label}>Name *</Text>
                             <TextInput style={stylesFieldWithLabel.field} value={name} onChangeText={setName}/>
                         </View> 
                     </View>
                 )}
                 <View style={styles.inputContainer}>
                     <View style={stylesFieldWithLabel}>
-                        <Text style={stylesFieldWithLabel.label}>Serves</Text>
+                        <Text style={stylesFieldWithLabel.label}>Serves *</Text>
                         <TextInput style={stylesFieldWithLabel.field} inputMode="numeric" keyboardType={"number-pad"} value={serves} onChangeText={setServes}/>
                     </View> 
                 </View>

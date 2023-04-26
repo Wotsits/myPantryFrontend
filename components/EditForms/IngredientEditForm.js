@@ -19,6 +19,10 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
     const [quantity, setQuantity] = useState("")
     // ----------------
 
+    useEffect(() => {
+        console.log("pantryItem", pantryItem)
+    }, [pantryItem])
+
     // ----------------
     // DROPDOWN STATE
     const [pantryItemDropDownOpen, setPantryItemDropDownOpen] = useState(false)
@@ -87,7 +91,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
             const payload = {
                 recipe: recipeId,
                 pantryItem: pantryItem.id,
-                quantity: parseInt(quantity),
+                quantity: parseFloat(quantity),
             }
             fetch(`${api}api/ingredient/${itemBeingEditedId}`, {
                 method: "PUT",
@@ -120,8 +124,8 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
         if (isValid) {
             const payload = {
                 recipe: recipeId,
-                pantryItem: pantryItem.id,
-                quantity: parseInt(quantity),
+                pantryItem: pantryItem,
+                quantity: parseFloat(quantity),
             }
             fetch(`${api}api/newIngredient/`, {
                 method: "POST",
@@ -154,7 +158,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
     else return (
         <>
             <Text style={styles.title}>
-                {itemBeingEditedId !== "0" ? "Edit" : "New"}
+                {itemBeingEditedId !== "0" ? "Edit Ingredient" : "New Ingredient"}
             </Text>
 
             <>
@@ -164,7 +168,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
             <View style={styles.form}> 
                 <View style={styles.inputContainer}>
                     <View style={[stylesFieldWithLabel, {zIndex: pantryItemDropDownOpen ? 1 : 0}]}>
-                        <Text style={stylesFieldWithLabel.label}>Pantry Item</Text>
+                        <Text style={stylesFieldWithLabel.label}>Pantry Item *</Text>
                         <DropDownPicker 
                             open={pantryItemDropDownOpen}
                             value={pantryItem.id}
@@ -183,7 +187,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                 
                 <View style={styles.inputContainer}>
                     <View style={stylesFieldWithLabel}>
-                        <Text style={stylesFieldWithLabel.label}>Quantity</Text>
+                        <Text style={stylesFieldWithLabel.label}>Quantity * </Text>
                         <View style={stylesFieldWithLabel.twoPartField}>
                             <TextInput style={[stylesFieldWithLabel.field, stylesFieldWithLabel.twoPartField.item]} value={quantity} inputMode={"numeric"} keyboardType={"decimal-pad"} onChangeText={setQuantity}/>
                             <Text style={stylesFieldWithLabel.twoPartField.item}>{pantryItem.capacity}{pantryItem.capacityMeasure} {pantryItem.container}</Text>

@@ -78,19 +78,52 @@ const RecipeDetail = ({recipeId}) => {
         if (updated && ingredients) {
             const matchingItemIndex = ingredients.findIndex(item => item.id === updated.id)
             if (matchingItemIndex !== -1) {
-                const ingredientsCpy = [...ingredients]
-                ingredientsCpy[matchingItemIndex] = updated
-                setIngredients(ingredientsCpy)
+                // this is needed as the created item does not have the pantryItem object attached to it
+                // so we need to fetch it from the server
+                fetch(`${api}api/ingredient/${updated.id}`, {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    }
+                }).then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Something went wrong');
+                }).then((data) => {
+                    console.log(data)
+                    const ingredientsCpy = [...ingredients]
+                    ingredientsCpy[matchingItemIndex] = data
+                    setIngredients(ingredientsCpy)
+                }).catch((error) => {
+                    console.error(error)
+                })
             }
         }
     }, [updated])
 
     useEffect(() => {
         if (created && ingredients) {
-            if (created.recipe.id === recipeId) {
-                const ingredientsCpy = [...ingredients]
-                ingredientsCpy.push(created)
-                setIngredients(ingredientsCpy)
+            if (created.recipe === recipeId) {
+                // this is needed as the created item does not have the pantryItem object attached to it
+                // so we need to fetch it from the server
+                fetch(`${api}api/ingredient/${created.id}`, {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    }
+                }).then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Something went wrong');
+                }).then((data) => {
+                    const ingredientsCpy = [...ingredients]
+                    ingredientsCpy.push(data)
+                    setIngredients(ingredientsCpy)
+                }).catch((error) => {
+                    console.error(error)
+                })
             }
         }
     }, [created])
@@ -123,14 +156,19 @@ const RecipeDetail = ({recipeId}) => {
                 <Text style={styles.container.sectionTitle.sub}>(Serves: {recipe.serves})</Text>
             </View>
             {ingredients.length === 0 && <View style={styles.container.noItems}><Text style={styles.container.noItems.text}>No ingredients added yet</Text></View>}
-            {ingredients.length > 0 && ingredients.map(ingredient => (
-                <ListItem itemActive={itemOpenInMenu === ingredient.id} setItemOpen={() => setItemOpenInMenu(recipe.id)} handleMenuActivation={() => handleMenuActivation(ingredient.id)}>
-                    <View style={styles.container.item}>
-                        <Text>{ingredient.pantryItem.name}</Text>
-                        <Text>{ingredient.quantity} {ingredient.pantryItem.container}</Text>
-                    </View>
-                </ListItem>
-            ))}
+            {ingredients.length > 0 && (
+                <ScrollView>
+                    {ingredients.map(ingredient => (
+                        <ListItem itemActive={itemOpenInMenu === ingredient.id} setItemOpen={() => setItemOpenInMenu(recipe.id)} handleMenuActivation={() => handleMenuActivation(ingredient.id)}>
+                            <View style={styles.container.item}>
+                                <Text>{ingredient.pantryItem.name}</Text>
+                                <Text>{ingredient.quantity} {ingredient.pantryItem.container}</Text>
+                            </View>
+                        </ListItem>
+                    ))}
+
+                </ScrollView>
+                )}
             <FloatingButton onPress={() => {
                 setItemOpenInMenu("0")
                 setMenuStageOpen("NEW")

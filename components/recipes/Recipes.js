@@ -1,5 +1,5 @@
 import React, { startTransition, useEffect, useState, useContext } from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Dimensions, Pressable, CheckBox} from 'react-native'
+import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Dimensions, Pressable, CheckBox, ToastAndroid} from 'react-native'
 import Header from '../main/Header'
 import { UserContext } from '../../contexts/UserContext';
 import SlidingMenu from '../slidingMenu/slidingMenu';
@@ -123,6 +123,7 @@ const Recipes = ({setActiveView, toggleNav}) => {
             }
         }).then(response => {
             if (response.ok) {
+                ToastAndroid.show('Shopping list generated - go to your shopping list.', ToastAndroid.SHORT)
                 return
             }
             throw new Error('Something went wrong');
@@ -158,6 +159,7 @@ const Recipes = ({setActiveView, toggleNav}) => {
             }
         }).then(response => {
             if (response.ok) {
+                ToastAndroid.show('Recipe consumption successful.', ToastAndroid.SHORT)
                 return
             }
             throw new Error('Something went wrong');

@@ -58,7 +58,7 @@ const Pantry = ({setActiveView, toggleNav}) => {
                 <SlidingMenu 
                     buttons={[
                         {icon: 'pencil-alt', text: "Edit Pantry Item", color: "black", onPress: () => setMenuStageOpen("EDIT")},
-                        {icon: 'trash-alt', text: "Delete Panty Item", color: "red", onPress: () => setMenuStageOpen("DELETE")}
+                        {icon: 'trash-alt', text: "Delete Pantry Item", color: "red", onPress: () => setMenuStageOpen("DELETE")}
                     ]} 
                     menuStageOpen={menuStageOpen}
                     closeMenu={() => {

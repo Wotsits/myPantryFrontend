@@ -5,14 +5,20 @@ import { stylesColors } from '../../styleObjects';
 
 const Login = ({setToken}) => {
     const [username, setUsername] = useState("");
+    const [usernameValid, setUsernameValid] = useState(false)
     const [password, setPassword] = useState("");
     const [loginLoading, setLoginLoading] = useState(false)
     const [loginFailed, setLoginFailed] = useState(false)
-    
+
     useEffect(() => {
-      console.log(loginFailed)
-    }, [loginFailed])
-    
+      const emailRegex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+      if (emailRegex.test(username)) {
+        setUsernameValid(true)
+      } else {
+        setUsernameValid(false)
+      }
+    }, [username])
+
     /**
      * A function which handles the login process
      */
@@ -61,9 +67,9 @@ const Login = ({setToken}) => {
                 padding: 20
               }}>Oops!  Login Failed - please try again</Text>}
                 <View style={styles.inputWrapper}>
-                    <TextInput style={styles.field} value={username} onChangeText={setUsername} inputMode="email" keyboardType="email-address" textAlign={"center"} placeholder={"Email Address"} autoFocus/>
-                    <TextInput style={styles.field} value={password} onChangeText={setPassword} secureTextEntry={true} textAlign={"center"} placeholder={"Password"}/>
-                    <Button style={styles.button} disabled={username.length === 0 || password.length === 0 || loginLoading } title={loginLoading ? "Loading" : "Login"} onPress={handleLogin}/>
+                    <TextInput style={styles.field} value={username} onChangeText={setUsername} inputMode="email" keyboardType="email-address" maxLength="255" autoCapitalize='none' textAlign={"center"} placeholder={"Email Address"} autoFocus/>
+                    <TextInput style={styles.field} value={password} onChangeText={setPassword} secureTextEntry={true} textAlign={"center"} maxLength="255" autoCapitalize='none' placeholder={"Password"}/>
+                    <Button style={styles.button} disabled={username.length === 0 || !usernameValid || password.length === 0 || loginLoading } title={loginLoading ? "Loading" : "Login"} onPress={handleLogin}/>
                 </View>
             </View>   
         </ImageBackground>
