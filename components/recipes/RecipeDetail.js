@@ -106,7 +106,6 @@ const RecipeDetail = ({recipeId}) => {
     }
 
     if (!recipe || !ingredients) return <Text>Loading...</Text>
-    console.log(ingredients)
     return (
         <View style={styles.container}>
             {recipe.imageSrc && (

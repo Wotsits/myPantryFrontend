@@ -22,10 +22,6 @@ const Recipes = ({setActiveView, toggleNav}) => {
     const [recipes, setRecipes] = useState([])
 
     useEffect(() => {
-        console.log(recipes.map(recipe => recipe.servings))
-    }, [recipes])
-
-    useEffect(() => {
         fetch(`${api}api/recipes/`, {
             method: "GET",
             headers: {
@@ -104,7 +100,6 @@ const Recipes = ({setActiveView, toggleNav}) => {
 
     function handleShoppingListSubmit() {
         const recipesToSubmit = recipes.filter(recipe => recipe.servings > 0)
-        console.log(recipesToSubmit)
 
         if (recipesToSubmit.length === 0) {
             handleReset()
@@ -116,7 +111,7 @@ const Recipes = ({setActiveView, toggleNav}) => {
         // reset the generate shopping list form 
         handleReset()
 
-        fetch(`${api}api/generate-shopping-list/`, {
+        fetch(`${api}api/generateShoppingList/`, {
             method: "POST",
             body: JSON.stringify(payload),
             headers: {
@@ -125,12 +120,9 @@ const Recipes = ({setActiveView, toggleNav}) => {
             }
         }).then(response => {
             if (response.ok) {
-                return response.json();
+                return
             }
             throw new Error('Something went wrong');
-        })
-        .then(data => {
-            console.log(data)
         })
         .catch((error) => {
             console.error(error)

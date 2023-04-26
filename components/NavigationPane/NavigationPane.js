@@ -22,13 +22,6 @@ const NavigationPane = ({navOpen, toggleNav, setActiveView}) => {
             }
         },
         {
-            text: "My Planner",
-            onPress: () => {
-                setActiveView(3)
-                toggleNav()
-            }
-        },
-        {
             text: "My Shopping List",
             onPress: () => {
                 setActiveView(4)

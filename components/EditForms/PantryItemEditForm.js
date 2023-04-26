@@ -37,6 +37,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
         {label: 'jar', value: 'jar'},
         {label: 'pack', value: 'pack'},
         {label: 'block', value: 'block'},
+        {label: 'bottle', value: 'bottle'},
         {label: 'item', value: 'item'},
     ]);
     // -----------

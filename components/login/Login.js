@@ -38,7 +38,6 @@ const Login = ({setToken}) => {
             throw new Error('Network response was not ok.');
         })
         .then(data => {
-          console.log(data)
             const token = data.token
             setLoginLoading(false)
             setToken(token)

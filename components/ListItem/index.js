@@ -21,7 +21,6 @@ const ListItem = ({ children, imageSrc, itemActive, handleMenuActivation, setIte
     }, [fieldValue])
 
     useEffect(() => {
-        console.log("called")
         if (localFieldValue !== "") {
             if (callbackOnFieldChange) {
                 callbackOnFieldChange(localFieldValue)

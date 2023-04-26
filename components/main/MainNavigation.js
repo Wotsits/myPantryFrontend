@@ -14,10 +14,6 @@ const MainNavigation = ({setActiveView, toggleNav}) => {
             onPress: () => setActiveView(2)
         },
         {
-            text: "My Planner",
-            onPress: () => setActiveView(3)
-        },
-        {
             text: "My Shopping List",
             onPress: () => setActiveView(4)
         },
