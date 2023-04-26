@@ -35,6 +35,7 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
             if (response.ok) {
                 setDeleted(itemOpenInMenu)
                 ToastAndroid.show(`Successfully deleted ${menuType.toLowerCase()}`, ToastAndroid.SHORT)
+                closeMenu()
                 return
             }
             throw new Error('Something went wrong');
