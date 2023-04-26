@@ -83,7 +83,7 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
         <>
             <Header viewName={"My Shopping List"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
             <View style={styles.container}>
-                {shoppingListLoading && <Text>Loading...</Text>}
+                {shoppingListLoading && <Text style={{color: "white"}}>Loading...</Text>}
                 {!shoppingListLoading && shoppingList.length > 0 && (
                     <>
                     <View style={{backgroundColor: "black", width: "100%", flexDirection: "row", justifyContent: "flex-end", padding: 10}}><Text style={{color: "white"}} onPress={markAsPurchased}>Mark as purchased</Text></View>
@@ -102,7 +102,7 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
                     </ScrollView>
                     </>
                 )}
-                {!shoppingListLoading && shoppingList.length === 0 && <Text>You have no items on your shopping list</Text>}
+                {!shoppingListLoading && shoppingList.length === 0 && <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}><Text style={{color: "white"}}>You have no items on your shopping list</Text></View>}
             </View>
         </>
     )
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       width:"100%",
+      backgroundColor: "black",
     },
     shoppingListItem: {
         flex: 1,
