@@ -9,6 +9,7 @@ import ListItem from '../ListItem';
 import { stylesColors } from '../../styleObjects';
 import RecipeDetail from './RecipeDetail';
 import { UpdatesContext } from '../../contexts/UpdatesContext'
+import FloatingButton from '../FloatingButton/FloatingButton';
 
 const Recipes = ({setActiveView, toggleNav}) => {
     const {token} = useContext(UserContext)
@@ -169,12 +170,11 @@ const Recipes = ({setActiveView, toggleNav}) => {
                     
                 ))}
             </ScrollView>
-            <View style={styles.container.floatingButton}>
-                <FontAwesome name="plus" size={50} onPress={() => {
+            <FloatingButton onPress={() => {
                     setItemOpenInMenu("0")
                     setMenuStageOpen("NEW")
-                }}/>
-            </View>
+                }}
+            />
             {itemOpenInMenu && (
                 <SlidingMenu 
                     buttons={[
@@ -261,19 +261,6 @@ const styles = StyleSheet.create({
                 justifyContent: 'center',
                 alignItems: 'center'
             }
-        },
-        floatingButton: {
-            position: "absolute",
-            justifyContent: "center",
-            alignItems: "center",
-            bottom: Dimensions.get('window').width * 0.05,
-            right: Dimensions.get('window').width * 0.05,
-            width: Dimensions.get('window').width * 0.25,
-            height: Dimensions.get('window').width * 0.25,
-            borderRadius: Dimensions.get('window').width * 0.25,
-            backgroundColor: stylesColors.yellow,
-            borderColor: stylesColors.borderColorDark,
-            borderWidth: 2
         }
     },
     
