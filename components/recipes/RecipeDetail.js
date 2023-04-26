@@ -7,6 +7,7 @@ import {api} from '../../settings'
 import ListItem from '../ListItem';
 import SlidingMenu from '../slidingMenu/slidingMenu';
 import { UpdatesContext } from '../../contexts/UpdatesContext'
+import FloatingButton from '../FloatingButton/FloatingButton';
 
 const RecipeDetail = ({recipeId}) => {
     const {token} = useContext(UserContext)
@@ -131,12 +132,10 @@ const RecipeDetail = ({recipeId}) => {
                     </View>
                 </ListItem>
             ))}
-            <View style={styles.container.floatingButton}>
-                <FontAwesome name="plus" size={50} onPress={() => {
-                    setItemOpenInMenu("0")
-                    setMenuStageOpen("NEW")
-                }}/>
-            </View>
+            <FloatingButton onPress={() => {
+                setItemOpenInMenu("0")
+                setMenuStageOpen("NEW")
+            }}/>
             {itemOpenInMenu && (
                 <SlidingMenu 
                     buttons={[
@@ -207,19 +206,6 @@ const styles = StyleSheet.create({
                 fontSize: 18,
             }
           
-        },
-        floatingButton: {
-            position: "absolute",
-            justifyContent: "center",
-            alignItems: "center",
-            bottom: Dimensions.get('window').width * 0.05,
-            right: Dimensions.get('window').width * 0.05,
-            width: Dimensions.get('window').width * 0.25,
-            height: Dimensions.get('window').width * 0.25,
-            borderRadius: Dimensions.get('window').width * 0.25,
-            backgroundColor: stylesColors.yellow,
-            borderColor: stylesColors.borderColorDark,
-            borderWidth: 2
         }
     }
 })
