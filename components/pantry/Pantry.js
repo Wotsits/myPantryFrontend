@@ -7,6 +7,7 @@ import SlidingMenu from '../slidingMenu/slidingMenu';
 import {api} from '../../settings'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import { stylesColors } from '../../styleObjects';
+import FloatingButton from '../FloatingButton/FloatingButton';
 
 const Pantry = ({setActiveView, toggleNav}) => {
     const [categories, setCategories] = useState([])
@@ -48,12 +49,11 @@ const Pantry = ({setActiveView, toggleNav}) => {
                         <PantryItemList categoryId={category.id} itemOpenInMenu={itemOpenInMenu} setItemOpenInMenu={setItemOpenInMenu}/>
                     </View>))}
             </ScrollView>
-            <View style={styles.container.floatingButton}>
-                <FontAwesome name="plus" size={50} onPress={() => {
+            <FloatingButton onPress={() => {
                     setItemOpenInMenu("0")
                     setMenuStageOpen("NEW")
-                }}/>
-            </View>
+                }}
+            />
             {itemOpenInMenu && (
                 <SlidingMenu 
                     buttons={[
