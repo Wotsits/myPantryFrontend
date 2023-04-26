@@ -18,6 +18,7 @@ const Recipes = ({setActiveView, toggleNav}) => {
     const [menuStageOpen, setMenuStageOpen] = useState("MENU")
     const [recipeOpen, setRecipeOpen] = useState(undefined)
     const [shoppingListCreationInProgress, setShoppingListCreationInProgress] = useState(false)
+    const [consumeInProgess, setConsumeInProgress] = useState(false)
     const [readyForRender, setReadyForRender] = useState(false)
 
     const [recipes, setRecipes] = useState([])
@@ -95,7 +96,8 @@ const Recipes = ({setActiveView, toggleNav}) => {
     }
 
     function handleReset() {
-        setShoppingListCreationInProgress(!shoppingListCreationInProgress)
+        setShoppingListCreationInProgress(false)
+        setConsumeInProgress(false)
         setRecipes(recipes.map(recipe => ({...recipe, servings: 0})))
     }
 
@@ -130,6 +132,41 @@ const Recipes = ({setActiveView, toggleNav}) => {
         })
     }
 
+    /**
+     * @desctiption This function handles the submission of the consume recipes data.  It will send a post request to the server with the recipes and servings to consume.  It will then reset the form.
+     * @returns void
+     */
+    function handleConsumeSubmit() {
+        const recipesToSubmit = recipes.filter(recipe => recipe.servings > 0)
+
+        if (recipesToSubmit.length === 0) {
+            handleReset()
+            return
+        }
+
+        const payload = recipesToSubmit.map(recipe => ({id: recipe.id, servings: recipe.servings}))
+        
+        // reset the generate shopping list form 
+        handleReset()
+
+        fetch(`${api}api/consumeRecipes/`, {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                return
+            }
+            throw new Error('Something went wrong');
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+    }
+
     if (!readyForRender) return <Text>Loading...</Text>
     if (recipeOpen) return (
         <View style={styles.container}>
@@ -142,28 +179,53 @@ const Recipes = ({setActiveView, toggleNav}) => {
         <View style={styles.container}>
             <Header viewName={"My Recipes"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
             {recipes.length === 0 && <Text>No recipes.  Why not add a recipe by clicking the yellow plus button?</Text>}
-            {!shoppingListCreationInProgress && <View style={styles.container.createListContainer}><Text style={styles.container.createListContainer.createListButton} onPress={() => setShoppingListCreationInProgress(true)}>Create Shopping List</Text></View>}
+            {!shoppingListCreationInProgress && !consumeInProgess && (
+                <View style={styles.container.submenuContainer}>
+                    <Text style={styles.container.submenuContainer.createListButton} onPress={() => setConsumeInProgress(true)}>
+                        Mark As Consumed
+                    </Text>
+                    <Text style={styles.container.submenuContainer.createListButton} onPress={() => setShoppingListCreationInProgress(true)}>
+                        Create Shopping List
+                    </Text>
+                </View>
+            )}
             {shoppingListCreationInProgress && (
-                <View style={styles.container.createListContainer}>
+                <View style={styles.container.submenuContainer}>
                     {recipes.filter(recipe => recipe.servings > 0).length > 0 && (
                         <View>
-                            <Text style={styles.container.createListContainer.createListButton} onPress={handleShoppingListSubmit}>
+                            <Text style={styles.container.submenuContainer.createListButton} onPress={handleShoppingListSubmit}>
                                 Generate
                             </Text>
                         </View>
                     )}
                     <View>
-                        <Text style={styles.container.createListContainer.createListButton} onPress={handleReset}>
+                        <Text style={styles.container.submenuContainer.createListButton} onPress={handleReset}>
                             Cancel
                         </Text>
                     </View>
                 </View>
             )}
+            {consumeInProgess && (
+                <View style={styles.container.submenuContainer}>
+                {recipes.filter(recipe => recipe.servings > 0).length > 0 && (
+                    <View>
+                        <Text style={styles.container.submenuContainer.createListButton} onPress={handleConsumeSubmit}>
+                            Mark As Consumed
+                        </Text>
+                    </View>
+                )}
+                <View>
+                    <Text style={styles.container.submenuContainer.createListButton} onPress={handleConsumeSubmit}>
+                        Cancel
+                    </Text>
+                </View>
+            </View>
+            )}
             <ScrollView style={styles.container.body}>
                 {recipes.length === 0 && <Text style={{color: 'white'}}>You have no saved recipes</Text>}
                 {recipes.length > 0 && recipes.map((recipe, index) => (
                     <View key={recipe.id}>
-                        <ListItem imageSrc={recipe.imageSrc || 'https://i.ibb.co/Cs7y1WZ/utensils-solid-removebg-preview.png'} itemActive={itemOpenInMenu === recipe.id} setItemOpen={() => setRecipeOpen(recipe.id)} handleMenuActivation={() => handleMenuActivation(recipe.id)} fieldValue={recipe.servings} exposeField={shoppingListCreationInProgress} callbackOnFieldChange={(value) => handleFieldUpdate(index, value)}>
+                        <ListItem imageSrc={recipe.imageSrc || 'https://i.ibb.co/Cs7y1WZ/utensils-solid-removebg-preview.png'} itemActive={itemOpenInMenu === recipe.id} setItemOpen={() => setRecipeOpen(recipe.id)} handleMenuActivation={() => handleMenuActivation(recipe.id)} fieldValue={recipe.servings} exposeField={shoppingListCreationInProgress || consumeInProgess} callbackOnFieldChange={(value) => handleFieldUpdate(index, value)}>
                             <Text style={styles.container.item.contentContainer.title}>{recipe.name}</Text>
                         </ListItem>
                     </View>
@@ -202,7 +264,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: "#000000",
-        createListContainer: {
+        submenuContainer: {
             width: "100%",
             flexDirection: 'row',
             justifyContent: 'flex-end',
