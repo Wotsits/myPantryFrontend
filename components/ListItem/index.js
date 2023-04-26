@@ -43,7 +43,7 @@ const ListItem = ({ children, imageSrc, itemActive, handleMenuActivation, setIte
                     {exposeField && (
                         <>
                             <Text>Servings</Text>
-                            <TextInput style={{borderWidth: 1, backgroundColor: stylesColors.borderColorLight, width: "100%", textAlign: 'center'}} value={localFieldValue} onChange={handleFieldValueChange}/>
+                            <TextInput style={{borderWidth: 1, backgroundColor: stylesColors.borderColorLight, width: "100%", textAlign: 'center'}} value={localFieldValue} onChange={handleFieldValueChange} keyboardType='number-pad' inputMode='numeric'/>
                         </>
                     )}
                     {!exposeField && <FontAwesome name={itemActive ? 'ellipsis-v' : 'ellipsis-h'} size={26} onPress={handleMenuActivation}/>}
