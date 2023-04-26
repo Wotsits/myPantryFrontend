@@ -121,7 +121,6 @@ const RecipeDetail = ({recipeId}) => {
             <View style={styles.container.sectionTitle}>
                 <Text style={styles.container.sectionTitle.title}>Ingredients</Text>
                 <Text style={styles.container.sectionTitle.sub}>(Serves: {recipe.serves})</Text>
-                <FontAwesome name="pencil-alt" size={24} color="white"/>
             </View>
             {ingredients.length === 0 && <View style={styles.container.noItems}><Text style={styles.container.noItems.text}>No ingredients added yet</Text></View>}
             {ingredients.length > 0 && ingredients.map(ingredient => (
