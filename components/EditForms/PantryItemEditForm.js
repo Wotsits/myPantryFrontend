@@ -89,6 +89,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                 setCapacityMeasure(data.capacityMeasure)
                 setContainer(data.container)
                 setOnHand(data.on_hand)
+                setCategory(data.category.id)
                 setReadyForRender(true)
             })
             .catch((error) => {
@@ -110,6 +111,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                 capacity: parseInt(capacity),
                 capacityMeasure: capacityMeasure,
                 container: container,
+                category: category,
                 on_hand: parseFloat(onHand)
             }
             fetch(`${api}api/pantryItem/${itemBeingEditedId}`, {
