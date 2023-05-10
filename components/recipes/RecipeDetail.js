@@ -1,6 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react'   
 import {View, StyleSheet, ImageBackground, ScrollView, Text} from 'react-native'
-import { stylesWhiteText } from '../../styleObjects';
+import { stylesColors } from '../../styleObjects';
 import { UserContext } from '../../contexts/UserContext';
 import {api} from '../../settings'
 import ListItem from '../ListItem';
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
             justifyContent: "flex-end",
             paddingBottom: 20,
             text: {
-                ...stylesWhiteText,
+                color: stylesColors.textColorLight,
                 backgroundColor: "rgba(0,0,0,0.5)",
                 fontSize: 30,
                 padding: 10,
@@ -256,11 +256,11 @@ const styles = StyleSheet.create({
             justifyContent: "space-between",
             padding: 10,
             title: {
-                ...stylesWhiteText,
+                color: stylesColors.textColorLight,
                 fontSize: 24,
             },
             sub: {
-                ...stylesWhiteText,
+                color: stylesColors.textColorLight,
                 fontSize: 18,
             }
         },
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
             alignItems: "center",
             padding: 10,
             text: {
-                ...stylesWhiteText,
+                color: stylesColors.textColorLight,
                 fontSize: 18,
             }
         }

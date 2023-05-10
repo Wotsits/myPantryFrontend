@@ -14,8 +14,8 @@ export const stylesColors = {
     borderColorDark: '#000000',
     positiveButtonGreen: "green",
     negativeButtonRed: "red",
-    negativeBackgroundRed: "#f7bcbc",
-    positiveBackgroundGreen: "#b4f7b4",
+    negativeBackgroundRed: "#F7BCBC",
+    positiveBackgroundGreen: "#B4F7B4",
     negativeBorderRed: "red",
     positiveBorderGreen: "green",
 }
@@ -48,9 +48,4 @@ export const stylesFieldWithLabel = {
             marginRight: 10
         }
     }
-}
-
-
-export const stylesWhiteText = {
-    color: '#FFFFFF'
 }
