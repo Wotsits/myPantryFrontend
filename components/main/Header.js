@@ -45,7 +45,7 @@ const Header = ({setActiveView, viewName, toggleNav}) => {
 
 const styles = StyleSheet.create({
     header: {
-        flex: 0.2,
+        height: 140,
         flexDirection: "row",
         width: "100%",
         backgroundColor: stylesColors.mainBackground,
