@@ -218,7 +218,7 @@ const Recipes = ({setActiveView, toggleNav}) => {
     // Render
     // -------------------
 
-    if (!readyForRender) return <Text>Loading...</Text>
+    if (!readyForRender) return <View style={styles.container}><Text style={{width: "100%", textAlign: "center", color: stylesColors.textColorLight}}>Loading...</Text></View>
     // if there is a recipe open, display it.
     if (recipeOpen) return (
         <View style={styles.container}>

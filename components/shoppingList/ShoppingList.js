@@ -20,6 +20,7 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
 
     const [shoppingList, setShoppingList] = useState([])
     const [shoppingListLoading, setShoppingListLoading] = useState(true)
+    const [readyForRender, setReadyForRender] = useState(false)
 
     // ----------------
     // UseEffects
@@ -49,6 +50,7 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
             })
             setShoppingList(newShoppingList)
             setShoppingListLoading(false)
+            setReadyForRender(true)
         })
         .catch((error) => {
             ToastAndroid.show('Failed to retrieve Shopping List Items', ToastAndroid.ERROR)
@@ -115,6 +117,7 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
     // Render
     // ----------------
 
+    if (!readyForRender) return <View style={styles.container}><Text style={{width: "100%", textAlign: "center", color: stylesColors.textColorLight}}>Loading...</Text></View>;
     return (
         <>
             {/* Header */}

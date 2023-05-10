@@ -24,6 +24,7 @@ const Pantry = ({setActiveView, toggleNav}) => {
     const [categories, setCategories] = useState([])
     const [itemOpenInMenu, setItemOpenInMenu] = useState("")
     const [menuStageOpen, setMenuStageOpen] = useState("MENU")
+    const [readyForRender, setReadyForRender] = useState(false)
 
     // ---------------------
     // UseEffects
@@ -46,6 +47,7 @@ const Pantry = ({setActiveView, toggleNav}) => {
         .then(data => {
             // set the state to the obtained pantry item categories.
             setCategories(data)
+            setReadyForRender(true)
         })
         .catch((error) => {
             ToastAndroid.show('Failed to retrieve Pantry Item Categories', ToastAndroid.ERROR)
@@ -57,6 +59,7 @@ const Pantry = ({setActiveView, toggleNav}) => {
     // Render
     // ---------------------
 
+    if (!readyForRender) return <View style={styles.container}><Text style={{width: "100%", textAlign: "center", color: stylesColors.textColorLight}}>Loading...</Text></View>
     return (
         <View style={styles.container}>
             {/* The header */}

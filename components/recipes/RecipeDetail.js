@@ -168,7 +168,7 @@ const RecipeDetail = ({recipeId}) => {
     // Render
     // ---------------------
 
-    if (!recipe || !ingredients) return <Text>Loading...</Text>
+    if (!recipe || !ingredients) return <View style={styles.container}><Text style={{width: "100%", textAlign: "center", color: stylesColors.textColorLight}}>Loading...</Text></View>
     return (
         <View style={styles.container}>
             {/* Image with title overlay */}
@@ -192,7 +192,7 @@ const RecipeDetail = ({recipeId}) => {
             {ingredients.length > 0 && (
                 <ScrollView>
                     {ingredients.map(ingredient => (
-                        <ListItem itemActive={itemOpenInMenu === ingredient.id} setItemOpen={() => setItemOpenInMenu(recipe.id)} handleMenuActivation={() => handleMenuActivation(ingredient.id)}>
+                        <ListItem key={ingredient.id} itemActive={itemOpenInMenu === ingredient.id} setItemOpen={() => setItemOpenInMenu(recipe.id)} handleMenuActivation={() => handleMenuActivation(ingredient.id)}>
                             <View style={styles.container.item}>
                                 <Text>{ingredient.pantryItem.name}</Text>
                                 <Text>{ingredient.quantity} {ingredient.pantryItem.container}</Text>
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
             text: {
                 color: stylesColors.textColorLight,
                 backgroundColor: "rgba(0,0,0,0.5)",
-                fontSize: 30,
+                fontSize: 27,
                 padding: 10,
             }
         },
