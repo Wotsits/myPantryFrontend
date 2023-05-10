@@ -278,7 +278,7 @@ const Recipes = ({setActiveView, toggleNav}) => {
                         </View>
                     )}
                     <View>
-                        <Text style={styles.container.submenuContainer.createListButton} onPress={handleConsumeSubmit}>
+                        <Text style={styles.container.submenuContainer.createListButton} onPress={handleReset}>
                             Cancel
                         </Text>
                     </View>
