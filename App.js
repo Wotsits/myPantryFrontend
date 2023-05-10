@@ -26,19 +26,34 @@ const App = () => {
   useEffect(() => {
     //check for existing token
     getFromSecureStore('secure_token').then(token => {
-      setToken(token).catch(err => console.log(err))
+      try {
+        setToken(token)
+      }
+      catch(err) {
+        console.log(err)
+      }
     });
   }, []) 
 
   function handleSetToken (token) {
     save('secure_token', token).then(() => {
-      setToken(token).catch(err => console.log(err))
+      try {
+        setToken(token)
+      }
+      catch(err) {
+        console.log(err)
+      }
     })
   }
 
   function handleLogOut() {
     deleteFromSecureStore().then(() => {
-      setToken(undefined).catch(err => console.log(err))
+      try {
+        setToken(undefined)
+      }
+      catch (err) {
+        console.log(err)
+      }
     })
   }
 

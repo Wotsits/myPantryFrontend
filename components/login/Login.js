@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground, Image, TextInput, Button, Text} from 'react-native'
+import {View, StyleSheet, ImageBackground, Image, TextInput, Button, Text, ToastAndroid} from 'react-native'
 import {api} from '../../settings'
 import { stylesColors } from '../../styleObjects';
 
@@ -8,7 +8,6 @@ const Login = ({setToken}) => {
     const [usernameValid, setUsernameValid] = useState(false)
     const [password, setPassword] = useState("");
     const [loginLoading, setLoginLoading] = useState(false)
-    const [loginFailed, setLoginFailed] = useState(false)
 
     useEffect(() => {
       const emailRegex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
@@ -39,17 +38,15 @@ const Login = ({setToken}) => {
                 return response.json();
             }
             setLoginLoading(false)
-            setLoginFailed(true)
-            setTimeout(() => setLoginFailed(false), 3000)
             throw new Error('Network response was not ok.');
         })
         .then(data => {
             const token = data.token
             setLoginLoading(false)
-            setToken(token)
+            setToken(token)           
         })
         .catch((error) => {
-            console.error(error)
+            ToastAndroid.show(`Login Failed - email address or password are incorrect.  Please try again. `, ToastAndroid.SHORT)
         })
     }
 
@@ -59,16 +56,9 @@ const Login = ({setToken}) => {
                 <Image style={styles.logo} source={require('../../assets/logo.png')} />
             </View>
             <View style={styles.section}>
-              {loginFailed && <Text style={{
-                backgroundColor: stylesColors.negativeBackgroundRed,
-                color: "black",
-                borderRadius: 3,
-                borderColor: stylesColors.negativeBorderRed,
-                padding: 20
-              }}>Oops!  Login Failed - please try again</Text>}
                 <View style={styles.inputWrapper}>
-                    <TextInput style={styles.field} value={username} onChangeText={setUsername} inputMode="email" keyboardType="email-address" maxLength="255" autoCapitalize='none' textAlign={"center"} placeholder={"Email Address"} autoFocus/>
-                    <TextInput style={styles.field} value={password} onChangeText={setPassword} secureTextEntry={true} textAlign={"center"} maxLength="255" autoCapitalize='none' placeholder={"Password"}/>
+                    <TextInput style={styles.field} value={username} onChangeText={setUsername} inputMode="email" keyboardType="email-address" maxLength={255} autoCapitalize='none' textAlign={"center"} placeholder={"Email Address"} autoFocus/>
+                    <TextInput style={styles.field} value={password} onChangeText={setPassword} secureTextEntry={true} textAlign={"center"} maxLength={255} autoCapitalize='none' placeholder={"Password"}/>
                     <Button style={styles.button} disabled={username.length === 0 || !usernameValid || password.length === 0 || loginLoading } title={loginLoading ? "Loading" : "Login"} onPress={handleLogin}/>
                 </View>
             </View>   
