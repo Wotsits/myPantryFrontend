@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react'   
-import {View, StyleSheet, ImageBackground, ScrollView, Text} from 'react-native'
+import {View, StyleSheet, ImageBackground, ScrollView, Text, ToastAndroid} from 'react-native'
 import { stylesColors } from '../../styleObjects';
 import { UserContext } from '../../contexts/UserContext';
 import {api} from '../../settings'
@@ -42,12 +42,13 @@ const RecipeDetail = ({recipeId}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setRecipe(data)
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to retrieve Recipe', ToastAndroid.ERROR)
             console.error(error)
         })
     }, [])
@@ -64,12 +65,13 @@ const RecipeDetail = ({recipeId}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setIngredients(data)
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to retrieve Ingredients', ToastAndroid.ERROR)
             console.error(error)
         })
     }, [])
@@ -103,13 +105,14 @@ const RecipeDetail = ({recipeId}) => {
                     if (response.ok) {
                         return response.json();
                     }
-                    throw new Error('Something went wrong');
+                    throw new Error(response.statusText);
                 }).then((data) => {
                     console.log(data)
                     const ingredientsCpy = [...ingredients]
                     ingredientsCpy[matchingItemIndex] = data
                     setIngredients(ingredientsCpy)
                 }).catch((error) => {
+                    ToastAndroid.show('Failed to retrieve Ingredient', ToastAndroid.ERROR)
                     console.error(error)
                 })
             }
@@ -130,12 +133,13 @@ const RecipeDetail = ({recipeId}) => {
                     if (response.ok) {
                         return response.json();
                     }
-                    throw new Error('Something went wrong');
+                    throw new Error(response.statusText);
                 }).then((data) => {
                     const ingredientsCpy = [...ingredients]
                     ingredientsCpy.push(data)
                     setIngredients(ingredientsCpy)
                 }).catch((error) => {
+                    ToastAndroid.show('Failed to retrieve Ingredient', ToastAndroid.ERROR)
                     console.error(error)
                 })
             }

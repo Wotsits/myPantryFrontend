@@ -38,13 +38,14 @@ const PantryItemList = ({categoryId, itemOpenInMenu, setItemOpenInMenu}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setItemList(data)
             setLoaded(true)
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to retrieve Pantry Items', ToastAndroid.ERROR)
             console.error(error)
         })
     }, [])

@@ -52,9 +52,10 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
                 closeMenu()
                 return
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .catch((error) => {
+            ToastAndroid.show(`Failed to delete ${menuType.toLowerCase()}`, ToastAndroid.ERROR)
             console.error(error)
         })
     }

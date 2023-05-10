@@ -42,7 +42,7 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error('Something went wrong');
+                throw new Error(response.statusText);
             })
             .then(data => {
                 setName(data.name)
@@ -51,6 +51,7 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
                 setReadyForRender(true)
             })
             .catch((error) => {
+                ToastAndroid.show('Failed to retrieve Recipe', ToastAndroid.ERROR)
                 console.error(error)
             })
         }
@@ -91,7 +92,7 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setUpdated(data)
@@ -100,6 +101,7 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
         })
         .catch(() => {
             ToastAndroid.show(`Update failed.  Please try again.`, ToastAndroid.SHORT)
+            console.error(error)
         })
     }
 
@@ -135,7 +137,7 @@ const RecipeEditForm = ({itemBeingEditedId, closeMenu}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setCreated(data)

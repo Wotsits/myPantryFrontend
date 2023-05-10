@@ -53,6 +53,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
             setReadyForRender(true)
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to retrieve Pantry Items', ToastAndroid.ERROR)
             console.error(error)
         })
         // call for the existing item.
@@ -67,7 +68,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error('Something went wrong');
+                throw new Error(response.statusText);
             })
             .then(data => {
                 setPantryItem(data.pantryItem)
@@ -75,6 +76,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                 setReadyForRender(true)
             })
             .catch((error) => {
+                ToastAndroid.show('Failed to retrieve Ingredient', ToastAndroid.ERROR)
                 console.error(error)
             })
         }
@@ -115,7 +117,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setUpdated(data)
@@ -123,6 +125,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
             closeMenu()
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to update Ingredient', ToastAndroid.ERROR)
             console.error(error)
         })
     }
@@ -156,7 +159,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setCreated(data)
@@ -164,6 +167,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
             closeMenu()
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to create Ingredient', ToastAndroid.ERROR)
             console.error(error)
         })
     }

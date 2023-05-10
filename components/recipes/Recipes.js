@@ -47,13 +47,14 @@ const Recipes = ({setActiveView, toggleNav}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setRecipes(data.map(recipe => ({...recipe, servings: 0})))
             setReadyForRender(true)
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to retrieve Recipes', ToastAndroid.ERROR)
             console.error(error)
         })
     }, [])
@@ -164,9 +165,10 @@ const Recipes = ({setActiveView, toggleNav}) => {
                 ToastAndroid.show('Shopping list generated - go to your shopping list.', ToastAndroid.SHORT)
                 return
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to generate shopping list', ToastAndroid.ERROR)
             console.error(error)
         })
     }
@@ -204,9 +206,10 @@ const Recipes = ({setActiveView, toggleNav}) => {
                 ToastAndroid.show('Recipe consumption successful.', ToastAndroid.SHORT)
                 return
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to consume recipes', ToastAndroid.ERROR)
             console.error(error)
         })
     }

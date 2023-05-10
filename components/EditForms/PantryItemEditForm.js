@@ -63,7 +63,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             const categoriesForDropdown = data.map(category => {
@@ -73,6 +73,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
             setReadyForRender(true)
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to retrieve Pantry Item Categories', ToastAndroid.ERROR)
             console.error(error)
         })
 
@@ -88,7 +89,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error('Something went wrong');
+                throw new Error(response.statusText);
             })
             .then(data => {
                 setName(data.name)
@@ -100,6 +101,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                 setReadyForRender(true)
             })
             .catch((error) => {
+                ToastAndroid.show('Failed to retrieve Pantry Item', ToastAndroid.ERROR)
                 console.error(error)
             })
         }
@@ -143,7 +145,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setUpdated(data)
@@ -151,6 +153,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
             closeMenu()
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to update Pantry Item', ToastAndroid.ERROR)
             console.error(error)
         })
     }
@@ -188,7 +191,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             setCreated(data)
@@ -196,6 +199,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
             closeMenu()
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to create Pantry Item', ToastAndroid.ERROR)
             console.error(error)
         })
     }

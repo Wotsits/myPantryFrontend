@@ -1,5 +1,5 @@
 import React, { startTransition, useEffect, useState, useContext } from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Dimensions} from 'react-native'
+import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Dimensions, ToastAndroid} from 'react-native'
 import Header from '../main/Header'
 import PantryItemList from './PantryItemList'
 import { UserContext } from '../../contexts/UserContext';
@@ -41,13 +41,14 @@ const Pantry = ({setActiveView, toggleNav}) => {
             if (response.ok) {
                 return response.json();
             }
-            throw new Error('Something went wrong');
+            throw new Error(response.statusText);
         })
         .then(data => {
             // set the state to the obtained pantry item categories.
             setCategories(data)
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to retrieve Pantry Item Categories', ToastAndroid.ERROR)
             console.error(error)
         })
     }, [])

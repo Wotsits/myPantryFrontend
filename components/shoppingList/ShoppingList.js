@@ -38,7 +38,7 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
                 return response.json();
             }
             setShoppingListLoading(false)
-            throw new Error('Network response was not ok.');
+            throw new Error(response.statusText);
         })
         .then(data => {
             const newShoppingList = data.map((item) => {
@@ -51,6 +51,7 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
             setShoppingListLoading(false)
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to retrieve Shopping List Items', ToastAndroid.ERROR)
             console.error(error)
         })
     }, [])
@@ -96,7 +97,7 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
             if (response.ok) {
                 return
             }
-            throw new Error('Network response was not ok.');
+            throw new Error(response.statusText);
         })
         .then(() => {
             const newShoppingList = shoppingList.filter((item) => {
@@ -105,6 +106,7 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
             setShoppingList(newShoppingList)
         })
         .catch((error) => {
+            ToastAndroid.show('Failed to add items to pantry', ToastAndroid.ERROR)
             console.error(error)
         })
     }

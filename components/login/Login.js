@@ -54,7 +54,7 @@ const Login = ({setToken}) => {
                 return response.json();
             }
             setLoginLoading(false)
-            throw new Error('Network response was not ok.');
+            throw new Error(response.statusText);
         })
         .then(data => {
             // save the token to the local state and the secure storage.
@@ -64,6 +64,7 @@ const Login = ({setToken}) => {
         })
         .catch((error) => {
             ToastAndroid.show(`Login Failed - email address or password are incorrect.  Please try again. `, ToastAndroid.SHORT)
+            console.error(error)
         })
     }
 
