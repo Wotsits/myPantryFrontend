@@ -5,11 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -20,7 +20,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000000"
       },
       "package": "com.simonsexton.MyPantry"
