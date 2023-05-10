@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react'
-import { StatusBar } from 'expo-status-bar';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import Login from './components/login/Login.js';
 import Home from './components/main/Home.js';
-import * as SecureStore from 'expo-secure-store';
 import { UserContext } from './contexts/UserContext';
 import { UpdatesContextProvider } from './contexts/UpdatesContext.js';
 
-
-async function getFromSecureStore(key) {
-  return await SecureStore.getItemAsync(key)
-} 
-
-async function save(key, value) {
-  await SecureStore.setItemAsync(key, value);
-}
-
-async function deleteFromSecureStore() {
-  await SecureStore.deleteItemAsync('secure_token');
-}
+import { getFromSecureStore } from './utils/secureStoreHelpers.js';
+import { saveToSecureStore } from './utils/secureStoreHelpers.js';
+import { deleteFromSecureStore } from './utils/secureStoreHelpers.js';
 
 const App = () => {
+
+  // ---------------------
+  // State Declarations
+  // ---------------------
+  
+  // auth token state.
   const [token, setToken] = useState(undefined)
 
+  // ---------------------
+  // UseEffects
+  // ---------------------
+
+  // on first load, check for an existing token and if it exists, set it's value in state.
   useEffect(() => {
     //check for existing token
     getFromSecureStore('secure_token').then(token => {
@@ -35,8 +35,17 @@ const App = () => {
     });
   }, []) 
 
+  // ---------------------
+  // Event handlers
+  // ---------------------
+
+  /**
+   * @description A function which handles a provided token
+   * @param {string} token - the token to be saved
+   * @returns void
+   */
   function handleSetToken (token) {
-    save('secure_token', token).then(() => {
+    saveToSecureStore('secure_token', token).then(() => {
       try {
         setToken(token)
       }
@@ -46,6 +55,10 @@ const App = () => {
     })
   }
 
+  /**
+   * @description A function which handles logging out a user
+   * @returns void
+   */
   function handleLogOut() {
     deleteFromSecureStore().then(() => {
       try {
@@ -57,10 +70,15 @@ const App = () => {
     })
   }
 
+  // ---------------------
+  // Return
+  // ---------------------
+
   return (
     <UserContext.Provider value={{token: token, logOut: handleLogOut}} >
       <UpdatesContextProvider value={{deleted: undefined, updated: undefined}} >
         <View style={styles.container}>
+          {/* if we have a token, show the home screen, otherwise show the login screen. */}
           {!token && <Login setToken={handleSetToken}/>}
           {token && <Home/>}
         </View>
@@ -68,6 +86,10 @@ const App = () => {
     </UserContext.Provider>
   );
 }
+
+// ---------------------
+// Style Definitions
+// ---------------------
 
 const styles = StyleSheet.create({
   container: {
