@@ -85,7 +85,8 @@ const Recipes = ({setActiveView, toggleNav}) => {
     }, [updated])
 
     useEffect(() => {
-        if (created && recipes) {
+        // ensure that the newly created thing is not an ingredient by checking for !created.recipe
+        if (created && recipes && !created.recipe) {
             const recipesCpy = [...recipes]
             recipesCpy.push({...created, servings: 0})
             setRecipes(recipesCpy)
@@ -332,7 +333,7 @@ const styles = StyleSheet.create({
         height: "100%",
         alignItems: 'center',
         justifyContent: 'flex-start',
-        backgroundColor: "#000000",
+        backgroundColor: stylesColors.mainBackground,
         submenuContainer: {
             width: "100%",
             flexDirection: 'row',
@@ -355,7 +356,7 @@ const styles = StyleSheet.create({
                     alignItems: 'center',
                     marginBottom: 10,
                     heading: {
-                        color: "#ffffff",
+                        color: stylesColors.textColorLight,
                         fontSize: 20,
                         paddingRight: 10
                     }
@@ -366,11 +367,11 @@ const styles = StyleSheet.create({
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingRight: 15,
-            backgroundColor: '#F7AD08',
+            backgroundColor: stylesColors.yellow,
             borderTopWidth: 2,
             borderBottomWidth: 2,
-            borderTopColor: "#ffffff",
-            borderBottomColor: "#ffffff",
+            borderTopColor: stylesColors.borderColorLight,
+            borderBottomColor: stylesColors.borderColorLight,
             contentContainer: {
                 flex: 0.80,
                 flexDirection: 'row',
