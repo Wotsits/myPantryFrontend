@@ -200,7 +200,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                             setItems={setPantryItems}
                             zIndex={3000}
                             zIndexInverse={1000}
-                            listMode="SCROLLVIEW"
+                            listMode="MODAL"
                             onOpen={() => Keyboard.dismiss()}
                         />
                     </View> 

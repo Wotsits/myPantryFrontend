@@ -253,7 +253,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                                     setItems={setCategories}
                                     zIndex={3000}
                                     zIndexInverse={1000}
-                                    listMode="SCROLLVIEW"
+                                    listMode="MODAL"
                                     onOpen={() => Keyboard.dismiss()}
                                 />
                             </View> 
@@ -286,6 +286,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                                 zIndex={2000}
                                 zIndexInverse={2000}
                                 dropDownDirection='TOP'
+                                listMode='MODAL'
                                 onOpen={() => Keyboard.dismiss()}
                             />
                         </View>
@@ -314,6 +315,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                                 zIndex={1000}
                                 zIndexInverse={3000}
                                 dropDownDirection='TOP'
+                                listMode='MODAL'
                                 onOpen={() => Keyboard.dismiss()}
                             />
                         </View>
