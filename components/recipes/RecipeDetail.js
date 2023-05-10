@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
             paddingRight: 20,
         },
         hero: {
-            flex: 0.4,
+            height: 200,
             justifyContent: "flex-end",
             paddingBottom: 20,
             text: {
