@@ -1,10 +1,9 @@
-import React, { startTransition, useEffect, useState, useContext } from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Dimensions, Pressable, CheckBox, ToastAndroid} from 'react-native'
+import React, { useEffect, useState, useContext } from 'react';
+import {View, StyleSheet, ScrollView, Text, ToastAndroid} from 'react-native'
 import Header from '../main/Header'
 import { UserContext } from '../../contexts/UserContext';
 import SlidingMenu from '../slidingMenu/slidingMenu';
 import {api} from '../../settings'
-import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import ListItem from '../ListItem';
 import { stylesColors } from '../../styleObjects';
 import RecipeDetail from './RecipeDetail';
@@ -12,17 +11,31 @@ import { UpdatesContext } from '../../contexts/UpdatesContext'
 import FloatingButton from '../FloatingButton/FloatingButton';
 
 const Recipes = ({setActiveView, toggleNav}) => {
+
+    // -------------------
+    // Context
+    // -------------------
+
     const {token} = useContext(UserContext)
     const {deleted, updated, created} = useContext(UpdatesContext)
+
+    // -------------------
+    // State Declarations
+    // -------------------
+
     const [itemOpenInMenu, setItemOpenInMenu] = useState("")
     const [menuStageOpen, setMenuStageOpen] = useState("MENU")
     const [recipeOpen, setRecipeOpen] = useState(undefined)
     const [shoppingListCreationInProgress, setShoppingListCreationInProgress] = useState(false)
     const [consumeInProgess, setConsumeInProgress] = useState(false)
     const [readyForRender, setReadyForRender] = useState(false)
-
     const [recipes, setRecipes] = useState([])
 
+    // -------------------
+    // UseEffects
+    // -------------------
+
+    // on first render, get the recipes.
     useEffect(() => {
         fetch(`${api}api/recipes/`, {
             method: "GET",
@@ -79,7 +92,14 @@ const Recipes = ({setActiveView, toggleNav}) => {
     }, [created])
 
     // -------------------
+    // Event Handlers
+    // -------------------
 
+    /**
+     * @description This function handles the opening and closing of the sliding menu.  It will set the itemOpenInMenu state to the provided recipeId.  If the itemOpenInMenu state is already set to the provided recipeId, it will set the itemOpenInMenu state to an empty string.
+     * @param {string} recipeId
+     * @returns void
+     */
     function handleMenuActivation(recipeId) {
         if (itemOpenInMenu === recipeId) {
             setItemOpenInMenu("")
@@ -89,31 +109,49 @@ const Recipes = ({setActiveView, toggleNav}) => {
         }
     }
 
+    /**
+     * @description This function handles the updating of the servings field for a recipe.  It will update the servings field for the recipe at the provided index with the provided value. 
+     * @param {number} index
+     * @param {number} value
+     * @returns void
+     */ 
     function handleFieldUpdate(index, value) {
         const recipesCpy = [...recipes]
         recipesCpy[index].servings = parseInt(value)
         setRecipes(recipesCpy)
     }
 
+    /**
+     * @description This function handles the resetting of the generate shopping list form.  It will set the shoppingListCreationInProgress state to false, the consumeInProgess state to false, and the servings field for all recipes to 0.
+     * @returns void
+     */
     function handleReset() {
         setShoppingListCreationInProgress(false)
         setConsumeInProgress(false)
         setRecipes(recipes.map(recipe => ({...recipe, servings: 0})))
     }
 
+    /**
+     * @desctiption This function handles the submission of the generate shopping list data.  It will send a post request to the server with the recipes and servings to generate a shopping list.  It will then reset the form.
+     * @returns void
+     */
     function handleShoppingListSubmit() {
+        // filter out any recipes with 0 servings
         const recipesToSubmit = recipes.filter(recipe => recipe.servings > 0)
 
+        // if there are no recipes with servings, reset the form and return.
         if (recipesToSubmit.length === 0) {
             handleReset()
             return
         }
 
+        // create the payload for the post request
         const payload = recipesToSubmit.map(recipe => ({id: recipe.id, servings: recipe.servings}))
         
         // reset the generate shopping list form 
         handleReset()
 
+        // send the post request
         fetch(`${api}api/generateShoppingList/`, {
             method: "POST",
             body: JSON.stringify(payload),
@@ -138,18 +176,22 @@ const Recipes = ({setActiveView, toggleNav}) => {
      * @returns void
      */
     function handleConsumeSubmit() {
+        // filter out any recipes with 0 servings
         const recipesToSubmit = recipes.filter(recipe => recipe.servings > 0)
 
+        // if there are no recipes with servings, reset the form and return.
         if (recipesToSubmit.length === 0) {
             handleReset()
             return
         }
 
+        // create the payload for the post request
         const payload = recipesToSubmit.map(recipe => ({id: recipe.id, servings: recipe.servings}))
         
         // reset the generate shopping list form 
         handleReset()
 
+        // send the post request
         fetch(`${api}api/consumeRecipes/`, {
             method: "POST",
             body: JSON.stringify(payload),
@@ -169,7 +211,12 @@ const Recipes = ({setActiveView, toggleNav}) => {
         })
     }
 
+    // -------------------
+    // Render
+    // -------------------
+
     if (!readyForRender) return <Text>Loading...</Text>
+    // if there is a recipe open, display it.
     if (recipeOpen) return (
         <View style={styles.container}>
             <Header viewName={"My Recipes"} setActiveView={() => setRecipeOpen(undefined)} toggleNav={toggleNav}/>
@@ -177,10 +224,17 @@ const Recipes = ({setActiveView, toggleNav}) => {
         </View>
         
     )
+    // if there is no recipe open, display the recipes.
     return (
         <View style={styles.container}>
+            
+            {/* Header */}
             <Header viewName={"My Recipes"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
+            
+            {/* Body */}
             {recipes.length === 0 && <Text>No recipes.  Why not add a recipe by clicking the yellow plus button?</Text>}
+
+            {/* if there are no actions in progress */}
             {!shoppingListCreationInProgress && !consumeInProgess && (
                 <View style={styles.container.submenuContainer}>
                     <Text style={styles.container.submenuContainer.createListButton} onPress={() => setConsumeInProgress(true)}>
@@ -191,6 +245,8 @@ const Recipes = ({setActiveView, toggleNav}) => {
                     </Text>
                 </View>
             )}
+
+            {/* if there is a shopping list in progress */}
             {shoppingListCreationInProgress && (
                 <View style={styles.container.submenuContainer}>
                     {recipes.filter(recipe => recipe.servings > 0).length > 0 && (
@@ -207,22 +263,26 @@ const Recipes = ({setActiveView, toggleNav}) => {
                     </View>
                 </View>
             )}
+
+            {/* if there is a consume in progress */}
             {consumeInProgess && (
                 <View style={styles.container.submenuContainer}>
-                {recipes.filter(recipe => recipe.servings > 0).length > 0 && (
+                    {recipes.filter(recipe => recipe.servings > 0).length > 0 && (
+                        <View>
+                            <Text style={styles.container.submenuContainer.createListButton} onPress={handleConsumeSubmit}>
+                                Mark As Consumed
+                            </Text>
+                        </View>
+                    )}
                     <View>
                         <Text style={styles.container.submenuContainer.createListButton} onPress={handleConsumeSubmit}>
-                            Mark As Consumed
+                            Cancel
                         </Text>
                     </View>
-                )}
-                <View>
-                    <Text style={styles.container.submenuContainer.createListButton} onPress={handleConsumeSubmit}>
-                        Cancel
-                    </Text>
                 </View>
-            </View>
             )}
+
+            {/* Always render the recipes if there are some. */}
             <ScrollView style={styles.container.body}>
                 {recipes.length === 0 && <Text style={{color: 'white'}}>You have no saved recipes</Text>}
                 {recipes.length > 0 && recipes.map((recipe, index) => (
@@ -234,11 +294,15 @@ const Recipes = ({setActiveView, toggleNav}) => {
                     
                 ))}
             </ScrollView>
+            
+            {/* Floating Button */}
             <FloatingButton onPress={() => {
                     setItemOpenInMenu("0")
                     setMenuStageOpen("NEW")
                 }}
             />
+
+            {/* Sliding Menu */}
             {itemOpenInMenu && (
                 <SlidingMenu 
                     buttons={[

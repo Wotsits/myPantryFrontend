@@ -1,15 +1,33 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button} from 'react-native'
+import {View, StyleSheet, Image, Text} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import { UserContext } from '../../contexts/UserContext';
+import { stylesColors } from '../../styleObjects';
 
 
 const Header = ({setActiveView, viewName, toggleNav}) => {
+    
+    // ---------------------
+    // Context
+    // ---------------------
+
     const {logOut} = React.useContext(UserContext);
 
+    // ---------------------
+    // Event handlers
+    // ---------------------
+
+    /**
+     * @description A function which handles logging out a user
+     * @returns void
+     */
     function handleLogOut() {
         logOut('secure_token')
     }
+
+    // ---------------------
+    // Render
+    // ---------------------
 
     return (
         <View style={styles.header}>
@@ -21,12 +39,16 @@ const Header = ({setActiveView, viewName, toggleNav}) => {
     )
 }
 
+// ---------------------
+// Style Definitions
+// ---------------------
+
 const styles = StyleSheet.create({
     header: {
         flex: 0.2,
         flexDirection: "row",
         width: "100%",
-        backgroundColor: "#000000",
+        backgroundColor: stylesColors.mainBackground,
         paddingLeft: 20,
         paddingRight: 20,
         paddingTop: 20,
@@ -38,11 +60,11 @@ const styles = StyleSheet.create({
             height: 100
         },
         viewName: {
-            color: '#ffffff',
+            color: stylesColors.textColorLight,
             fontSize: 20
         },
         headerItem: {
-            color: '#ffffff'
+            color: stylesColors.textColorLight
         }
     }
 })

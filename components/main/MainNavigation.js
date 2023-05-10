@@ -1,9 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button} from 'react-native'
+import {View, StyleSheet, ImageBackground, ScrollView, Text} from 'react-native'
 import Header from './Header'
+import { stylesColors } from '../../styleObjects';
 
 const MainNavigation = ({setActiveView, toggleNav}) => {
 
+    // options for the navigation menu.
     const options = [
         {
             text: "My Pantry",
@@ -19,10 +21,15 @@ const MainNavigation = ({setActiveView, toggleNav}) => {
         },
     ]
 
+    // ---------------------
+    // Render
+    // ---------------------
+
     return (
         <ImageBackground source={require('../../assets/splash.png')} style={styles.container}>
             <Header toggleNav={toggleNav}/>
             <ScrollView style={styles.body}>
+                {/* map over the options and render item for each. */}
                 {options.map((option, index) => {
                     if (index === 0) {
                         return (
@@ -47,6 +54,10 @@ const MainNavigation = ({setActiveView, toggleNav}) => {
     )
 }
 
+// ---------------------
+// Style Definitions
+// ---------------------
+
 const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -61,10 +72,10 @@ const styles = StyleSheet.create({
         item: {
             borderTopWidth: 5,
             borderTopStyle: "solid",
-            borderTopColor: '#ffffff',
+            borderTopColor: stylesColors.borderColorLight,
             borderBottomWidth: 5,
             borderBottomStyle: "solid",
-            borderBottomColor: '#ffffff',
+            borderBottomColor: stylesColors.borderColorLight,
             height: 200,
             alignItems: "flex-end",
             justifyContent: "flex-end",
@@ -74,23 +85,23 @@ const styles = StyleSheet.create({
                 paddingBottom: 10,
                 paddingLeft: 15,
                 paddingRight: 15,
-                color: "#ffffff",
+                color: stylesColors.textColorLight,
                 fontSize: 20,
-                backgroundColor: "#3B4548",
+                backgroundColor: stylesColors.navBackground,
                 borderTopWidth: 3,
                 borderLeftWidth: 3,
                 borderBottomWidth: 3,
-                borderTopColor: '#ffffff',
-                borderBottomColor: '#ffffff',
-                borderLeftColor: '#ffffff',
+                borderTopColor: stylesColors.borderColorLight,
+                borderBottomColor: stylesColors.borderColorLight,
+                borderLeftColor: stylesColors.borderColorLight,
                 borderTopStyle: "solid",
                 borderBottomStyle: "solid",
-                borderBottomColor: '#ffffff',
+                borderBottomColor: stylesColors.borderColorLight,
             }
         },
         spacer: {
             height: 100,
-            backgroundColor: "#000000",
+            backgroundColor: stylesColors.mainBackground,
         }
     }
 })

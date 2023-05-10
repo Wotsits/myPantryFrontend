@@ -1,10 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button} from 'react-native'
+import React from 'react'
+import {View, StyleSheet, Text} from 'react-native'
 import ListItem from '../ListItem'
 
 
 const PantryItemListItem = ({ id, name, onHand, container, capacity, capacityMeasure, itemOpenInMenu, setItemOpenInMenu }) => {
 
+    // ---------------------
+    // Event handlers
+    // ---------------------
+
+    /**
+     * @description A function which handles the activation of the menu for a given item.
+     * @returns void
+     */
     function handleMenuActivation() {
         if (itemOpenInMenu === id) {
             setItemOpenInMenu("")
@@ -13,6 +21,10 @@ const PantryItemListItem = ({ id, name, onHand, container, capacity, capacityMea
             setItemOpenInMenu(id)
         }
     }
+
+    // ---------------------
+    // Render
+    // ---------------------
 
     return (
         <ListItem itemActive={itemOpenInMenu === id} handleMenuActivation={handleMenuActivation}>

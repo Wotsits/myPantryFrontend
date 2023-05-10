@@ -1,14 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground, Image, TextInput, Button, Text, ToastAndroid} from 'react-native'
+import {View, StyleSheet, ImageBackground, Image, TextInput, Button, ToastAndroid} from 'react-native'
 import {api} from '../../settings'
 import { stylesColors } from '../../styleObjects';
 
 const Login = ({setToken}) => {
+
+    // ---------------------
+    // State Declarations
+    // ---------------------
+
     const [username, setUsername] = useState("");
     const [usernameValid, setUsernameValid] = useState(false)
     const [password, setPassword] = useState("");
     const [loginLoading, setLoginLoading] = useState(false)
 
+    // ---------------------
+    // UseEffects
+    // ---------------------
+
+    // check if the username is valid each time it changes.
     useEffect(() => {
       const emailRegex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
       if (emailRegex.test(username)) {
@@ -18,10 +28,16 @@ const Login = ({setToken}) => {
       }
     }, [username])
 
+    // ---------------------
+    // Event Handlers
+    // ---------------------
+
     /**
-     * A function which handles the login process
+     * @description A function which handles the login process
+     * @returns void
      */
     function handleLogin () {
+        // set the login loading state to true, set back to false when the fetch is complete.
         setLoginLoading(true)
         fetch(`${api}api-token-auth/`, {
             method: "POST",
@@ -41,14 +57,19 @@ const Login = ({setToken}) => {
             throw new Error('Network response was not ok.');
         })
         .then(data => {
+            // save the token to the local state and the secure storage.
             const token = data.token
-            setLoginLoading(false)
-            setToken(token)           
+            setToken(token)   
+            setLoginLoading(false)        
         })
         .catch((error) => {
             ToastAndroid.show(`Login Failed - email address or password are incorrect.  Please try again. `, ToastAndroid.SHORT)
         })
     }
+
+    // ---------------------
+    // Render
+    // ---------------------
 
     return (
         <ImageBackground source={require('../../assets/splash.png')} style={styles.container}>
@@ -65,6 +86,10 @@ const Login = ({setToken}) => {
         </ImageBackground>
     )
 }
+
+// ----------------
+// Styles Definitions
+// ----------------
 
 const styles = StyleSheet.create({
   container: {
@@ -96,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   field: {
-    backgroundColor: "#fff",
+    backgroundColor: stylesColors.lightBackground,
     paddingVertical: 10,
     borderRadius: 5,
   },

@@ -1,17 +1,32 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button} from 'react-native'
+import {View, StyleSheet, Text} from 'react-native'
 import { UserContext } from '../../contexts/UserContext';
 import { api } from '../../settings';
 import PantryItemListItem from './PantryItemListItem';
 import { UpdatesContext } from '../../contexts/UpdatesContext'
+import { stylesColors } from '../../styleObjects';
 
 const PantryItemList = ({categoryId, itemOpenInMenu, setItemOpenInMenu}) => {
+    
+    // ---------------------
+    // Context
+    // ---------------------
+
     const {token} =useContext(UserContext)
     const {deleted, updated, created} = useContext(UpdatesContext)
+
+    // ---------------------
+    // State Declarations
+    // ---------------------
 
     const [itemList, setItemList] = useState([])
     const [loaded, setLoaded] = useState(false)
 
+    // ---------------------
+    // UseEffects
+    // ---------------------
+
+    // grab the pantry items for the provided category id on load.
     useEffect(() => {
         fetch(`${api}api/pantryItemsByCategory/${categoryId}`, {
             method: "GET",
@@ -69,7 +84,9 @@ const PantryItemList = ({categoryId, itemOpenInMenu, setItemOpenInMenu}) => {
         }
     }, [created])
 
-    // -------------------
+    // ---------------------
+    // Render
+    // ---------------------
 
     return (
         <View>
@@ -91,9 +108,13 @@ const PantryItemList = ({categoryId, itemOpenInMenu, setItemOpenInMenu}) => {
     )
 } 
 
+// ---------------------
+// Style Definitions
+// ---------------------
+
 const styles = StyleSheet.create({
     listItem: {
-        color: "#ffffff"
+        color: stylesColors.textColorLight
     }
 })
 

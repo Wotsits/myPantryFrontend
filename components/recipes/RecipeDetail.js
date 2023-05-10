@@ -1,7 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react'   
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Pressable, Dimensions} from 'react-native'
-import { stylesColors, stylesWhiteText } from '../../styleObjects';
-import FontAwesome from '@expo/vector-icons/FontAwesome5'
+import {View, StyleSheet, ImageBackground, ScrollView, Text} from 'react-native'
+import { stylesWhiteText } from '../../styleObjects';
 import { UserContext } from '../../contexts/UserContext';
 import {api} from '../../settings'
 import ListItem from '../ListItem';
@@ -10,14 +9,28 @@ import { UpdatesContext } from '../../contexts/UpdatesContext'
 import FloatingButton from '../FloatingButton/FloatingButton';
 
 const RecipeDetail = ({recipeId}) => {
+
+    // ---------------------
+    // Context
+    // ---------------------
+
     const {token} = useContext(UserContext)
     const {deleted, updated, created} = useContext(UpdatesContext)
+
+    // ---------------------
+    // State Declarations
+    // ---------------------
 
     const [recipe, setRecipe] = useState(undefined)
     const [ingredients, setIngredients] = useState(undefined)
     const [itemOpenInMenu, setItemOpenInMenu] = useState("")
     const [menuStageOpen, setMenuStageOpen] = useState("MENU")
 
+    // ---------------------
+    // UseEffects
+    // ---------------------
+
+    // on first render, get the recipes.
     useEffect(() => {
         fetch(`${api}api/recipe/${recipeId}`, {
             method: "GET",
@@ -39,6 +52,7 @@ const RecipeDetail = ({recipeId}) => {
         })
     }, [])
 
+    // on first render, get the ingredients.
     useEffect(() => {
         fetch(`${api}api/ingredientsByRecipe/${recipeId}`, {
             method: "GET",
@@ -128,8 +142,15 @@ const RecipeDetail = ({recipeId}) => {
         }
     }, [created])
 
-    // -------------------
+    // ---------------------
+    // Event Handlers
+    // ---------------------
 
+    /**
+     * Handles the activation of the menu for a given ingredient.
+     * @param {string} ingredientId
+     * @returns {void}
+     */
     function handleMenuActivation(ingredientId) {
         if (itemOpenInMenu === ingredientId) {
             setItemOpenInMenu("")
@@ -139,9 +160,14 @@ const RecipeDetail = ({recipeId}) => {
         }
     }
 
+    // ---------------------
+    // Render
+    // ---------------------
+
     if (!recipe || !ingredients) return <Text>Loading...</Text>
     return (
         <View style={styles.container}>
+            {/* Image with title overlay */}
             {recipe.imageSrc && (
                 <ImageBackground style={styles.container.hero} source={{ uri: recipe.imageSrc }}>
                     <Text style={styles.container.hero.text}>{recipe.name}</Text>
@@ -151,10 +177,13 @@ const RecipeDetail = ({recipeId}) => {
                 <Text style={styles.container.hero.text}>{recipe.name}</Text>
             )}
             
+            {/* Bit between the image/title and the ingredients.  */}
             <View style={styles.container.sectionTitle}>
                 <Text style={styles.container.sectionTitle.title}>Ingredients</Text>
                 <Text style={styles.container.sectionTitle.sub}>(Serves: {recipe.serves})</Text>
             </View>
+
+            {/* Ingredients */}
             {ingredients.length === 0 && <View style={styles.container.noItems}><Text style={styles.container.noItems.text}>No ingredients added yet</Text></View>}
             {ingredients.length > 0 && (
                 <ScrollView>
@@ -169,10 +198,14 @@ const RecipeDetail = ({recipeId}) => {
 
                 </ScrollView>
                 )}
+            
+            {/* Floating Button */}
             <FloatingButton onPress={() => {
                 setItemOpenInMenu("0")
                 setMenuStageOpen("NEW")
             }}/>
+
+            {/* Sliding Menu */}
             {itemOpenInMenu && (
                 <SlidingMenu 
                     buttons={[
@@ -193,6 +226,10 @@ const RecipeDetail = ({recipeId}) => {
     )
 }
 
+// ---------------------
+// Style Definitions
+// ---------------------
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -201,7 +238,6 @@ const styles = StyleSheet.create({
             width: "100%",
             alignItems: "flex-end",
             paddingRight: 20,
-            
         },
         hero: {
             flex: 0.4,
@@ -242,7 +278,6 @@ const styles = StyleSheet.create({
                 ...stylesWhiteText,
                 fontSize: 18,
             }
-          
         }
     }
 })

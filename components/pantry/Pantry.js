@@ -10,11 +10,26 @@ import { stylesColors } from '../../styleObjects';
 import FloatingButton from '../FloatingButton/FloatingButton';
 
 const Pantry = ({setActiveView, toggleNav}) => {
-    const [categories, setCategories] = useState([])
+    
+    // ---------------------
+    // Context
+    // ---------------------
+
     const {token} = useContext(UserContext)
+    
+    // ---------------------
+    // State Declarations
+    // ---------------------
+
+    const [categories, setCategories] = useState([])
     const [itemOpenInMenu, setItemOpenInMenu] = useState("")
     const [menuStageOpen, setMenuStageOpen] = useState("MENU")
 
+    // ---------------------
+    // UseEffects
+    // ---------------------
+
+    // on first render, get the pantry item categories.
     useEffect(() => {
         fetch(`${api}api/pantryItemCategories/`, {
             method: "GET",
@@ -29,6 +44,7 @@ const Pantry = ({setActiveView, toggleNav}) => {
             throw new Error('Something went wrong');
         })
         .then(data => {
+            // set the state to the obtained pantry item categories.
             setCategories(data)
         })
         .catch((error) => {
@@ -36,10 +52,18 @@ const Pantry = ({setActiveView, toggleNav}) => {
         })
     }, [])
 
+    // ---------------------
+    // Render
+    // ---------------------
+
     return (
         <View style={styles.container}>
+            {/* The header */}
             <Header viewName={"My Pantry"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
+            
+            {/* The content */}
             <ScrollView style={styles.container.body}>
+                {/* Map over the categories and create a category heading and render the pantryItemList beneath */}
                 {categories.map(category => (
                     <View key={category.id} style={styles.container.body.category}>
                         <View style={styles.container.body.category.headingContainer}>
@@ -49,11 +73,15 @@ const Pantry = ({setActiveView, toggleNav}) => {
                         <PantryItemList categoryId={category.id} itemOpenInMenu={itemOpenInMenu} setItemOpenInMenu={setItemOpenInMenu}/>
                     </View>))}
             </ScrollView>
+
+            {/* The flaoting add button */}
             <FloatingButton onPress={() => {
                     setItemOpenInMenu("0")
                     setMenuStageOpen("NEW")
                 }}
             />
+
+            {/* The sliding menu */}
             {itemOpenInMenu && (
                 <SlidingMenu 
                     buttons={[
@@ -73,6 +101,10 @@ const Pantry = ({setActiveView, toggleNav}) => {
     )
 }
 
+// ---------------------
+// Style Definitions
+// ---------------------
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -80,7 +112,7 @@ const styles = StyleSheet.create({
         height: "100%",
         alignItems: 'center',
         justifyContent: 'flex-start',
-        backgroundColor: "#000000",
+        backgroundColor: stylesColors.mainBackground,
         body: {
             flex: 0.85,
             width: "100%",
@@ -93,7 +125,7 @@ const styles = StyleSheet.create({
                     alignItems: 'center',
                     marginBottom: 10,
                     heading: {
-                        color: "#ffffff",
+                        color: stylesColors.textColorLight,
                         fontSize: 20,
                         paddingRight: 10
                     }

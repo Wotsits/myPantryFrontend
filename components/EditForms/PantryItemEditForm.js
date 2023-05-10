@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Pressable, ToastAndroid} from 'react-native'
+import {View, StyleSheet, TextInput, Text, Pressable, ToastAndroid} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import DropDownPicker from 'react-native-dropdown-picker';
 import { UserContext } from '../../contexts/UserContext';
@@ -9,19 +9,24 @@ import {stylesColors, stylesInputField, stylesFieldWithLabel} from '../../styleO
 
 const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
     
+    // ----------------
+    // Context
+    // ----------------
+
     const {token} = useContext(UserContext)
     const {setUpdated, setCreated} = useContext(UpdatesContext)
-    const [readyForRender, setReadyForRender] = useState(false)
+    
+    // ----------------
+    // State Declarations
+    // ----------------
 
+    const [readyForRender, setReadyForRender] = useState(false)
     const [name, setName] = useState("")
     const [capacity, setCapacity] = useState("")
     const [capacityMeasure, setCapacityMeasure] = useState("")
     const [container, setContainer] = useState("")
     const [onHand, setOnHand] = useState("")
     const [category, setCategory] = useState("Ambient")
-
-    //------------
-    //DROPDOWN SETUP
     const [categoryDropDownOpen, setCategoryDropDownOpen] = useState(false)
     const [categories, setCategories] = useState(undefined)
     const [capacityMeasuresDropDownOpen, setCapacityMeasuresDropDownOpen] = useState(false)
@@ -40,10 +45,12 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
         {label: 'bottle', value: 'bottle'},
         {label: 'item', value: 'item'},
     ]);
-    // -----------
 
-    // -----------
-    // HANDLE INITIAL LOAD
+    // ----------------
+    // UseEffects
+    // ----------------
+
+    // handle initial load
     useEffect(() => {
         // regardless, call for the categories list.
         fetch(`${api}api/pantryItemCategories/`, {
@@ -99,88 +106,108 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
         else setReadyForRender(true)
     }, [])
 
-    // ----------
+    // ----------------
+    // Event handlers
+    // ----------------
 
-    // ----------
-    // HANDLE EDIT AND CREATE
+    /**
+     * @description A function which handles editing an existing pantry item
+     * @returns void
+     */
     function handleEdit() {
+        // validate the form
         const isValid = name !== "" && capacityMeasure !== "" && capacity !== "" && container !== "" && onHand !== ""
-        if (isValid) {
-            const payload = {
-                name: name,
-                capacity: parseInt(capacity),
-                capacityMeasure: capacityMeasure,
-                container: container,
-                category: category,
-                on_hand: parseFloat(onHand)
+        // if the form is not valid, show a toast and return.
+        if (!isValid) {
+            ToastAndroid.show('Form invalid - Please complete all fields', ToastAndroid.SHORT)
+            return
+        }
+        // otherwise, make the api call.
+        const payload = {
+            name: name,
+            capacity: parseInt(capacity),
+            capacityMeasure: capacityMeasure,
+            container: container,
+            category: category,
+            on_hand: parseFloat(onHand)
+        }
+        fetch(`${api}api/pantryItem/${itemBeingEditedId}`, {
+            method: "PUT",
+            body: JSON.stringify(payload),
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-type': 'application/json'
             }
-            fetch(`${api}api/pantryItem/${itemBeingEditedId}`, {
-                method: "PUT",
-                body: JSON.stringify(payload),
-                headers: {
-                    'Authorization': `Token ${token}`,
-                    'Content-type': 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then(data => {
-                setUpdated(data)
-                ToastAndroid.show(`Successfully updated ${data.name}`, ToastAndroid.SHORT)
-                closeMenu()
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-        } else ToastAndroid.show('Form invalid - Please complete all fields', ToastAndroid.SHORT)
-        
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(data => {
+            setUpdated(data)
+            ToastAndroid.show(`Successfully updated ${data.name}`, ToastAndroid.SHORT)
+            closeMenu()
+        })
+        .catch((error) => {
+            console.error(error)
+        })
     }
 
+    /**
+     * @description A function which handles creating a new pantry item
+     * @returns void
+     */ 
     function handleCreate() {
+        // validate the form
         const isValid = name !== "" && capacityMeasure !== "" && capacity !== "" && container !== "" && onHand !== "" && category !== ""
-        if (isValid) {
-            const payload = {
-                name: name,
-                capacity: parseInt(capacity),
-                capacityMeasure: capacityMeasure,
-                container: container,
-                category: category,
-                on_hand: parseFloat(onHand)
-            }
-            fetch(`${api}api/newPantryItem/`, {
-                method: "POST",
-                body: JSON.stringify(payload),
-                headers: {
-                    'Authorization': `Token ${token}`,
-                    'Content-type': 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then(data => {
-                setCreated(data)
-                ToastAndroid.show(`Successfully created ${data.name}`, ToastAndroid.SHORT)
-                closeMenu()
-            })
-            .catch((error) => {
-                console.error(error)
-            })
+        // if the form is not valid, show a toast and return.
+        if (!isValid) {
+            ToastAndroid.show('Form invalid - Please complete all fields', ToastAndroid.SHORT)
+            return
         }
-        else ToastAndroid.show('Form invalid - Please complete all fields', ToastAndroid.SHORT)
+        // otherwise, make the api call.
+        const payload = {
+            name: name,
+            capacity: parseInt(capacity),
+            capacityMeasure: capacityMeasure,
+            container: container,
+            category: category,
+            on_hand: parseFloat(onHand)
+        }
+        fetch(`${api}api/newPantryItem/`, {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(data => {
+            setCreated(data)
+            ToastAndroid.show(`Successfully created ${data.name}`, ToastAndroid.SHORT)
+            closeMenu()
+        })
+        .catch((error) => {
+            console.error(error)
+        })
     }
-    // -----------
+
+    // ----------------
+    // Render
+    // ----------------
 
     if (!readyForRender) return <Text>Loading...</Text>
-    else return (
+    return (
         <>
+            {/* Title */}
             <Text style={styles.title}>
                 {itemBeingEditedId !== "0" ? "Edit" : "New"}
             </Text>
@@ -189,7 +216,11 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                     {name}
                 </Text>
             )}
-            <View style={styles.form}> 
+
+            {/* Form */}
+            <View style={styles.form}>
+                {/* if the itemBeingEdited is 0, it means that there is no item being edited and this should be handled as a create form. 
+                Therefore the Name of the name field and the category field should be displayed.*/} 
                 {itemBeingEditedId === "0" && (
                     <>
                         <View style={styles.inputContainer}>
@@ -224,6 +255,8 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                         </View>
                     </>
                 )}
+
+                {/* Regardless of new/edit, these fields should be displayed */}
                 <View style={stylesFieldWithLabel}>
                     <Text style={stylesFieldWithLabel.label}>Capacity of each container*</Text>
                     <View style={styles.inputContainer}>
@@ -278,6 +311,8 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                     </View>
                 </View>
             </View> 
+
+            {/* Save Button */}
             <View style={styles.buttonContainer}>
                 <Pressable style={styles.buttonContainer.saveButton} onPress={itemBeingEditedId !== "0" ? handleEdit : handleCreate}>
                     <FontAwesome name="pencil-alt" color="white" size={32}/>
@@ -291,6 +326,10 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
         </>
     )
 }
+
+// ----------------
+// Style Definitions
+// ----------------
 
 const styles = StyleSheet.create({
     title: {

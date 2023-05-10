@@ -1,36 +1,36 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Pressable, ToastAndroid} from 'react-native'
+import {View, StyleSheet, TextInput, Text, Pressable, ToastAndroid} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import DropDownPicker from 'react-native-dropdown-picker';
 import { UserContext } from '../../contexts/UserContext';
 import { UpdatesContext } from '../../contexts/UpdatesContext';
 import { api } from '../../settings';
-import {stylesColors, stylesInputField, stylesFieldWithLabel, stylesWidthHalf} from '../../styleObjects'
+import {stylesColors, stylesFieldWithLabel} from '../../styleObjects'
 
 const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
     
+    // ----------------
+    // Context
+    // ----------------
+
     const {token} = useContext(UserContext)
     const {setUpdated, setCreated} = useContext(UpdatesContext)
-    const [readyForRender, setReadyForRender] = useState(false)
 
     // ----------------
-    // FIELD STATE
+    // State Declarations
+    // ----------------
+    
+    const [readyForRender, setReadyForRender] = useState(false)
     const [pantryItem, setPantryItem] = useState("")
     const [quantity, setQuantity] = useState("")
-    // ----------------
-
-    useEffect(() => {
-        console.log("pantryItem", pantryItem)
-    }, [pantryItem])
-
-    // ----------------
-    // DROPDOWN STATE
     const [pantryItemDropDownOpen, setPantryItemDropDownOpen] = useState(false)
     const [pantryItems, setPantryItems] = useState(undefined)
+    
+    // ----------------
+    // UseEffects
     // ----------------
 
-    // ----------------
-    // HANDLE INITIAL LOAD
+    // load the pantry items from the api on first render.
     useEffect(() => {
         // regardless of whether we're editing or creating, we need to get the pantry items to populate the dropdown
         fetch(`${api}api/pantryItems/`, {
@@ -82,89 +82,105 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
     }, [])
 
     // ----------------
+    // Event Handlers
+    // ----------------
+    
+    /**
+     * @description A function which handles editing an existing ingredient
+     * @returns void
+     */
+    function handleEdit() {
+        // validate the form
+        const isValid = pantryItem !== "" && quantity !== ""
+        // if the form is not valid, return early and alert the user.
+        if (!isValid) {
+            ToastAndroid.show('Form invalid - Please complete all fields', ToastAndroid.SHORT)
+            return
+        }
+        // if the form is valid, make the api call.
+        const payload = {
+            recipe: recipeId,
+            pantryItem: pantryItem.id,
+            quantity: parseFloat(quantity),
+        }
+        fetch(`${api}api/ingredient/${itemBeingEditedId}`, {
+            method: "PUT",
+            body: JSON.stringify(payload),
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(data => {
+            setUpdated(data)
+            ToastAndroid.show(`Successfully updated ingredient`, ToastAndroid.SHORT)
+            closeMenu()
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+    }
+
+    /**
+     * @description A function which handles creating a new ingredient
+     * @returns void
+     */
+    function handleCreate() {
+        // validate the form
+        const isValid = pantryItem !== "" && quantity !== ""
+        // if the form is not valid, return early and alert the user.
+        if (!isValid) {
+            ToastAndroid.show('Form invalid - Please complete all fields', ToastAndroid.SHORT)
+            return
+        }
+        const payload = {
+            recipe: recipeId,
+            pantryItem: pantryItem,
+            quantity: parseFloat(quantity),
+        }
+        fetch(`${api}api/newIngredient/`, {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: {
+                'Authorization': `Token ${token}`,
+                'Content-type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(data => {
+            setCreated(data)
+            ToastAndroid.show(`Successfully created ingredient`, ToastAndroid.SHORT)
+            closeMenu()
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+    }
 
     // ----------------
-    // HANDLE EDIT AND CREATE
-    function handleEdit() {
-        const isValid = pantryItem !== "" && quantity !== ""
-        if (isValid) {
-            const payload = {
-                recipe: recipeId,
-                pantryItem: pantryItem.id,
-                quantity: parseFloat(quantity),
-            }
-            fetch(`${api}api/ingredient/${itemBeingEditedId}`, {
-                method: "PUT",
-                body: JSON.stringify(payload),
-                headers: {
-                    'Authorization': `Token ${token}`,
-                    'Content-type': 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then(data => {
-                setUpdated(data)
-                ToastAndroid.show(`Successfully updated ingredient`, ToastAndroid.SHORT)
-                closeMenu()
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-        } else ToastAndroid.show('Form invalid - Please complete all fields', ToastAndroid.SHORT)
-        
-    }
-
-    function handleCreate() {
-        const isValid = pantryItem !== "" && quantity !== ""
-        if (isValid) {
-            const payload = {
-                recipe: recipeId,
-                pantryItem: pantryItem,
-                quantity: parseFloat(quantity),
-            }
-            fetch(`${api}api/newIngredient/`, {
-                method: "POST",
-                body: JSON.stringify(payload),
-                headers: {
-                    'Authorization': `Token ${token}`,
-                    'Content-type': 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Something went wrong');
-            })
-            .then(data => {
-                setCreated(data)
-                ToastAndroid.show(`Successfully created ingredient`, ToastAndroid.SHORT)
-                closeMenu()
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-        }
-        else ToastAndroid.show('Form invalid - Please complete all fields', ToastAndroid.SHORT)
-    }
+    // Render
     // ----------------
 
     if (!readyForRender) return <Text>Loading...</Text>
-    else return (
+    return (
         <>
+            {/* Title */}
             <Text style={styles.title}>
                 {itemBeingEditedId !== "0" ? "Edit Ingredient" : "New Ingredient"}
             </Text>
 
-            <>
-                
-            </>
-
+            {/* Form */}
             <View style={styles.form}> 
                 <View style={styles.inputContainer}>
                     <View style={[stylesFieldWithLabel, {zIndex: pantryItemDropDownOpen ? 1 : 0}]}>
@@ -196,6 +212,8 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                 </View>
                 
             </View> 
+
+            {/* Save Button */}
             <View style={styles.buttonContainer}>
                 <Pressable style={styles.buttonContainer.saveButton} onPress={itemBeingEditedId !== "0" ? handleEdit : handleCreate}>
                     <FontAwesome name="pencil-alt" color="white" size={32}/>
@@ -209,6 +227,10 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
         </>
     )
 }
+
+// ----------------
+// Style Definitions
+// ----------------
 
 const styles = StyleSheet.create({
     title: {

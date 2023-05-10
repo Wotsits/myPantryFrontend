@@ -1,5 +1,5 @@
 import React,{useContext} from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button, Pressable, ToastAndroid} from 'react-native'
+import {View, StyleSheet, Text, Pressable, ToastAndroid} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import PantryItemEditForm from '../EditForms/PantryItemEditForm';
 import RecipeEditForm from '../EditForms/RecipeEditForm';
@@ -7,12 +7,26 @@ import IngredientEditForm from '../EditForms/IngredientEditForm';
 import { UserContext } from '../../contexts/UserContext';
 import { UpdatesContext } from '../../contexts/UpdatesContext';
 import { api } from '../../settings';
+import {stylesColors} from '../../styleObjects'
 
 
 const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuType, relatedItemId}) => {
+    
+    // ----------------
+    // Context
+    // ----------------
+
     const {token} =useContext(UserContext)
     const {setDeleted} = useContext(UpdatesContext)
 
+    // ----------------
+    // Event Handlers
+    // ----------------
+
+    /**
+     * @description handles the delete button press.
+     * @param {*} menuType 
+     */
     function handleDelete(menuType) {
         let deleteEndpoint = ""
         //set the endpoint based on the menuType
@@ -44,7 +58,12 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
             console.error(error)
         })
     }
+
+    // ----------------
+    // Render
+    // ----------------
     
+    // the menu is conditionally rendered based on the menuStageOpen state.
     if (menuStageOpen === "MENU") {
         return (
             <View style={styles.slidingMenu}>
@@ -108,6 +127,10 @@ const SlidingMenu = ({buttons, menuStageOpen, closeMenu, itemOpenInMenu, menuTyp
     else return null
 }
 
+// ----------------
+// Style Definitions
+// ----------------
+
 const styles = StyleSheet.create({
     slidingMenu: {
         position: 'absolute',
@@ -119,7 +142,7 @@ const styles = StyleSheet.create({
         closeContainer: {
             width: "100%",
             alignItems: "flex-end",
-            backgroundColor: '#EEE8D7'
+            backgroundColor: stylesColors.menuBackground
         },
         contentContainer: {
             width: "100%",
@@ -142,11 +165,11 @@ const styles = StyleSheet.create({
                     margin: 10,
                     padding: 10,
                     borderRadius: 5,
-                    backgroundColor: "red"
+                    backgroundColor: stylesColors.negativeButtonRed
                 }
             },
         },
-        backgroundColor: '#EEE8D7'
+        backgroundColor: stylesColors.menuBackground
     }
 })
 

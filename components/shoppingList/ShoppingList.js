@@ -1,18 +1,29 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {View, StyleSheet, ImageBackground, Image, ScrollView, TextInput, Text, Button} from 'react-native'
+import {View, StyleSheet, ScrollView, Text} from 'react-native'
 import Header from '../main/Header'
 import {api} from '../../settings'
 import { UserContext } from '../../contexts/UserContext';
 import { stylesColors } from '../../styleObjects';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
-
-
-
 const ShoppingList = ({setActiveView, toggleNav}) => {
+
+    // ----------------
+    // Context
+    // ----------------
+
     const {token} = useContext(UserContext)
+
+    // ----------------
+    // State Declarations
+    // ----------------
+
     const [shoppingList, setShoppingList] = useState([])
     const [shoppingListLoading, setShoppingListLoading] = useState(true)
+
+    // ----------------
+    // UseEffects
+    // ----------------
 
     // on initial component load, call the shopping list items endpoint
     useEffect(() => {
@@ -44,16 +55,35 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
         })
     }, [])
 
+    // ----------------
+    // Event Handlers
+    // ----------------
+
+    /**
+     * @description toggles the isChecked property of the shopping list item at the provided index.
+     * @param {*} isChecked 
+     * @param {*} index 
+     */
     function handleCheckToggle(isChecked, index) {
         const newShoppingList = [...shoppingList]
         newShoppingList[index].isChecked = isChecked
         setShoppingList(newShoppingList)
     }
 
+    /**
+     * @description marks all checked items as purchased.
+     * @returns
+     */
     function markAsPurchased() {
+        // get all checked items
         const payload = shoppingList.filter((item) => {
             return item.isChecked
         })
+
+        // if there are no checked items, return.
+        if (payload.length === 0) return
+        
+        // call the api to add the items to the pantry.
         fetch(`${api}api/addShoppingListItemsToPantry/`, {
             method: "POST",
             body: JSON.stringify(payload),
@@ -79,14 +109,23 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
         })
     }
 
+    // ----------------
+    // Render
+    // ----------------
+
     return (
         <>
+            {/* Header */}
             <Header viewName={"My Shopping List"} setActiveView={() => setActiveView(0)} toggleNav={toggleNav}/>
+            
+            {/* Shopping List */}
             <View style={styles.container}>
-                {shoppingListLoading && <Text style={{color: "white"}}>Loading...</Text>}
+                {/* List loading */}
+                {shoppingListLoading && <Text style={{color: "white", width: "100%", textAlign: "center"}}>Loading...</Text>}
+                {/* Shopping List Items */}
                 {!shoppingListLoading && shoppingList.length > 0 && (
                     <>
-                    <View style={{backgroundColor: "black", width: "100%", flexDirection: "row", justifyContent: "flex-end", padding: 10}}><Text style={{color: "white"}} onPress={markAsPurchased}>Mark as purchased</Text></View>
+                    <View style={{backgroundColor: "black", width: "100%", flexDirection: "row", justifyContent: "flex-end", padding: 10}}><Text style={{color: stylesColors.textColorLight}} onPress={markAsPurchased}>Mark as purchased</Text></View>
                     <ScrollView>
                         {shoppingList.map((item, index) => {
                             return (
@@ -102,7 +141,8 @@ const ShoppingList = ({setActiveView, toggleNav}) => {
                     </ScrollView>
                     </>
                 )}
-                {!shoppingListLoading && shoppingList.length === 0 && <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}><Text style={{color: "white"}}>You have no items on your shopping list</Text></View>}
+                {/* No items on shopping list */}
+                {!shoppingListLoading && shoppingList.length === 0 && <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}><Text style={{color: stylesColors.textColorLight}}>You have no items on your shopping list</Text></View>}
             </View>
         </>
     )

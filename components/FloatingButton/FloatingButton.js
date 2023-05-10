@@ -1,11 +1,16 @@
 import React, {useRef} from 'react'
-import {View, StyleSheet, Dimensions, PanResponder, Animated} from 'react-native'
+import {StyleSheet, Dimensions, PanResponder, Animated} from 'react-native'
 import { FontAwesome } from '@expo/vector-icons';
 import { stylesColors } from '../../styleObjects';
 
 const FloatingButton = ({onPress}) => {
-    const pan = useRef(new Animated.ValueXY()).current;
 
+    // ---------------------
+    // State Declarations
+    // ---------------------
+
+    // animation handling for the ability to drag the button around.
+    const pan = useRef(new Animated.ValueXY()).current;
     const panResponder = useRef(
         PanResponder.create({
           onMoveShouldSetPanResponder: () => true,
@@ -16,12 +21,20 @@ const FloatingButton = ({onPress}) => {
         }),
       ).current;
 
+    // ---------------------
+    // Render
+    // ---------------------
+
     return (
         <Animated.View style={{...styles.floatingButton, transform: [{translateX: pan.x}, {translateY: pan.y}]}} {...panResponder.panHandlers}>
             <FontAwesome name="plus" size={50} onPress={onPress}/>
         </Animated.View>
     )
 }
+
+// ---------------------
+// Style Definitions
+// ---------------------
 
 const styles = StyleSheet.create({
     floatingButton: {
