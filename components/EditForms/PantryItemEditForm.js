@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, StyleSheet, TextInput, Text, Pressable, ToastAndroid} from 'react-native'
+import {View, StyleSheet, TextInput, Text, Pressable, ToastAndroid, Keyboard} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome5'
 import DropDownPicker from 'react-native-dropdown-picker';
 import { UserContext } from '../../contexts/UserContext';
@@ -254,6 +254,7 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                                     zIndex={3000}
                                     zIndexInverse={1000}
                                     listMode="SCROLLVIEW"
+                                    onOpen={() => Keyboard.dismiss()}
                                 />
                             </View> 
                         </View>
@@ -284,6 +285,8 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                                 setItems={setCapacityMeasures}
                                 zIndex={2000}
                                 zIndexInverse={2000}
+                                dropDownDirection='TOP'
+                                onOpen={() => Keyboard.dismiss()}
                             />
                         </View>
                     </View>
@@ -310,6 +313,8 @@ const PantryItemEditForm = ({itemBeingEditedId, closeMenu}) => {
                                 setItems={setContainers}
                                 zIndex={1000}
                                 zIndexInverse={3000}
+                                dropDownDirection='TOP'
+                                onOpen={() => Keyboard.dismiss()}
                             />
                         </View>
                     </View>
