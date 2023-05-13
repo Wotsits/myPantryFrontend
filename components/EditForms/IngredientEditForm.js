@@ -71,7 +71,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                 throw new Error(response.statusText);
             })
             .then(data => {
-                setPantryItem(data.pantryItem)
+                setPantryItem(data.pantryItem.id)
                 setQuantity(data.quantity.toString())
                 setReadyForRender(true)
             })
@@ -202,6 +202,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                             zIndexInverse={1000}
                             listMode="MODAL"
                             onOpen={() => Keyboard.dismiss()}
+                            searchable={true}
                         />
                     </View> 
                 </View>
