@@ -191,7 +191,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
                         <Text style={stylesFieldWithLabel.label}>Pantry Item *</Text>
                         <DropDownPicker 
                             open={pantryItemDropDownOpen}
-                            value={pantryItem.id}
+                            value={pantryItem}
                             items={pantryItems ? pantryItems : ["Loading..."]}
                             setOpen={() => {
                                 setPantryItemDropDownOpen(!pantryItemDropDownOpen)
