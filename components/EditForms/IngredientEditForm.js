@@ -102,7 +102,7 @@ const IngredientEditForm = ({itemBeingEditedId, closeMenu, recipeId}) => {
         // if the form is valid, make the api call.
         const payload = {
             recipe: recipeId,
-            pantryItem: pantryItem.id,
+            pantryItem: pantryItem,
             quantity: parseFloat(quantity),
         }
         fetch(`${api}api/ingredient/${itemBeingEditedId}`, {

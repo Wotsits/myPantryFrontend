@@ -107,7 +107,6 @@ const RecipeDetail = ({recipeId}) => {
                     }
                     throw new Error(response.statusText);
                 }).then((data) => {
-                    console.log(data)
                     const ingredientsCpy = [...ingredients]
                     ingredientsCpy[matchingItemIndex] = data
                     setIngredients(ingredientsCpy)
